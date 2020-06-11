@@ -1,0 +1,1769 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java并发编程 | 东方未明</title>
+<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1591891137605">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://EastBeforeDawn.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Java并发编程 | 东方未明 - Atom Feed" href="https://EastBeforeDawn.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="volatile关键字
+
+volatile是java提供的轻量级的同步机制，主要有三个特性：
+
+
+保证可见性
+禁止指令重排
+不保证原子性。
+
+JMM（Java 内存模型）
+基本概念
+
+JMM本身是一种抽象的概念 并不真实存在，他描述的是一组..." />
+    <meta name="keywords" content="Java" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://EastBeforeDawn.github.io">
+  <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1591891137605" alt="">
+  </a>
+  <h1 class="site-title">
+    东方未明
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Java并发编程
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-11
+              </span>
+              <span>
+                40 min read
+              </span>
+              
+                <a href="https://EastBeforeDawn.github.io/tag/kqgzXDB_o/" class="post-tag">
+                  # Java
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://wx4.sinaimg.cn/large/93db2409ly1fv0zmy18krj21hc0u0x2v.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="volatile关键字">volatile关键字</h2>
+<blockquote>
+<p>volatile是java提供的轻量级的同步机制，主要有三个特性：</p>
+</blockquote>
+<ul>
+<li>保证可见性</li>
+<li>禁止指令重排</li>
+<li>不保证原子性。</li>
+</ul>
+<h3 id="jmmjava-内存模型">JMM（Java 内存模型）</h3>
+<h4 id="基本概念">基本概念</h4>
+<blockquote>
+<p>JMM本身是一种抽象的概念 并不真实存在，他描述的是一组定义或规范，通过这组规范规定了程序中的访问方式<br>
+JMM同步规定：</p>
+</blockquote>
+<ul>
+<li>线程解锁前必须把共享变量的值刷回主内存</li>
+<li>线程加锁前把主内存的值复制到自己的内存</li>
+<li>加锁和解锁必须是同一把锁。</li>
+</ul>
+<blockquote>
+<p>运行程序的实体是线程，而每个线程创建时 JVM 都会为其创建一个工作内存，工作内存是每个线程的私有数据区域，而 Java 内存模型中规定所有变量的储存在主内存，主内存是共享内存区域，所有的线程都可以访问，但线程对变量的操作（读取赋值等）必须都工作内存进行看。</p>
+</blockquote>
+<blockquote>
+<p>从主内存拷贝内存空间，然后对变量进行操作，操作完成后再将变量写回主内存，不能直接操作主内存中的变量，工作内存中存储着主内存中的变量副本拷贝，前面说过，工作内存是每个线程的私有数据区域，因此不同的线程间无法访问对方的工作内存，线程间的通信(传值)必须通过主内存来完成。</p>
+</blockquote>
+<h5 id="可见性代码示例">可见性代码示例</h5>
+<pre><code class="language-java">public class VolatileDemo {
+    static int v1;
+
+    public static void main(String[] args) {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                v1 = 100;
+
+            }
+        }).start();
+        
+        while (v1 == 0) {
+
+        }
+        System.out.println(&quot;v1 = &quot; + v1);
+
+    }
+
+}
+</code></pre>
+<p>上面示例无法输出结果，当主线程已经读到v1的值时，如果不加volatile关键字，另一个线程更改这个值不会去通知主线程。所以进入死循环。如果加上volatile关键字，则会刷新主线程的v1的值，打印之后结束主线程。</p>
+<h5 id="不保证原子性代码示例">不保证原子性代码示例</h5>
+<pre><code class="language-java">public class VolatileDemo {
+     static volatile int v1;
+     public static void add(){
+         v1++;
+     }
+
+    public static void main(String[] args) throws InterruptedException {
+
+        for(int i = 0;i&lt; 20;i++) {
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    for(int i = 0;i &lt; 1000; i++){
+                    add();
+                    }
+                }
+            }).start();
+        }
+          //当活动线程只有主线程和GC时才进行打印否则让位其他线程
+       while (Thread.activeCount() &gt; 2){
+           Thread.yield();
+       }
+        System.out.println(&quot;v1 = &quot; + v1);
+
+    }
+
+}
+</code></pre>
+<ul>
+<li>i++并非原子操作，包含三个步骤</li>
+</ul>
+<ol>
+<li>读取i的值</li>
+<li>将i的值加一</li>
+<li>将加一后的值写回i</li>
+</ol>
+<ul>
+<li>发现上面示例打印的总是比20000小，说明volatile并不能保证原子性 。</li>
+</ul>
+<h5 id="禁止指令重排">禁止指令重排</h5>
+<blockquote>
+<p>指令重排：一般情况下，CPU和编译器为了提升程序执行的效率，会按照一定的规则允许进行指令优化，在某些情况下，这种优化会带来一些执行的逻辑问题，主要的原因是代码逻辑之间是存在一定的先后顺序，在并发执行情况下，会发生二义性，即按照不同的执行逻辑，会得到不同的结果信息。</p>
+</blockquote>
+<blockquote>
+<p>volatile 实现禁止指令重排序的优化，从而避免了多线程环境下程序出现乱序的现象。先了解一个概念，内存屏障（Memory Barrier）又称内存栅栏，是一个 CPU 指令，他的作用有两个：</p>
+</blockquote>
+<ol>
+<li>保证特定操作的执行顺序</li>
+<li>保证某些变量的内存可见性（利用该特性实现 volatile 的内存可见性）</li>
+</ol>
+<blockquote>
+<p>由于编译器个处理器都能执行指令重排序优化，如果在指令间插入一条 Memory Barrier 则会告诉编译器和 CPU，不管什么指令都不能个这条 Memory Barrier 指令重排序，也就是说通过插入内存屏障禁止在内存屏障前后执行重排序优化。内存屏障另一个作用是强制刷出各种 CPU 缓存数据，因此任何 CPU 上的线程都能读取到这些数据的最新版本。</p>
+</blockquote>
+<h5 id="volatile常见用法双端检锁单例">volatile常见用法（双端检锁单例）</h5>
+<pre><code class="language-java">public class Singleton {
+    private static volatile Singleton singleton;
+
+    private Singleton() {
+    }
+
+    public static Singleton getInstance(){
+        if(singleton == null){
+            synchronized (Singleton.class){
+                if(singleton == null){
+                    singleton = new Singleton();
+                }
+            }
+        }
+        return singleton;
+    }
+}
+</code></pre>
+<ul>
+<li>如果不加volatile多线程环境下存在指令重排的风险，singleton = new Singleton(); 可以分解为三条指令
+<ol>
+<li>分配内存地址</li>
+<li>初始化对象</li>
+<li>将内存地址指向初始化对象</li>
+</ol>
+</li>
+<li>由于指令重排只保证单线程下程序的执行结果，编译可以优化为1,3,2的顺序，这样在getInstance方法调用时singleton == null。加上volatile可以避免这个问题。</li>
+</ul>
+<h2 id="cas-compareandswap比较并交换">CAS （CompareAndSwap）比较并交换</h2>
+<blockquote>
+<p>CAS是一种无锁编程，对比synchronized效率更高。CAS操作包含三个操作数——内存位置（V），预期原值（A）和新值（B）。如果内存位置的值与预期原值相匹配，那么处理器将会自动将该位置值更新为新值，否则，不做任何操作。无论哪种情况，它都会在CAS指令之前返回该位置的值。</p>
+</blockquote>
+<blockquote>
+<p>通过以上定义我们知道CAS其实是有三个步骤的:</p>
+</blockquote>
+<ol>
+<li>读取内存中的值</li>
+<li>将读取的值和预期的值比较</li>
+<li>如果比较的结果符合预期，则写入新值</li>
+</ol>
+<blockquote>
+<p>CAS 体现在 JAVA 语言中就是 sun.misc.Unsafe 类中的各个方法。调用 UnSafe 类中的 CAS 方法，JVM 会帮我们实现出 CAS 汇编指令。这是一种完全依赖硬件的功能，通过它实现了原子操作。由于 CAS 是一种系统源语，源语属于操作系统用语范畴，是由若干条指令组成，用于完成某一个功能的过程，并且原语的执行必须是连续的，在执行的过程中不允许被中断，也就是说 CAS 是一条原子指令，不会造成所谓的数据不一致的问题。</p>
+</blockquote>
+<h3 id="unsafe类">UnSafe类</h3>
+<pre><code class="language-java">public class AtomicInteger extends Number implements java.io.Serializable {
+    private static final long serialVersionUID = 6214790243416807050L;
+
+    // setup to use Unsafe.compareAndSwapInt for updates
+    private static final Unsafe unsafe = Unsafe.getUnsafe();
+    private static final long valueOffset;
+
+    static {
+        try {
+            valueOffset = unsafe.objectFieldOffset
+                (AtomicInteger.class.getDeclaredField(&quot;value&quot;));
+        } catch (Exception ex) { throw new Error(ex); }
+    }
+
+    private volatile int value;
+
+    /**
+     * Creates a new AtomicInteger with the given initial value.
+     *
+     * @param initialValue the initial value
+     */
+    public AtomicInteger(int initialValue) {
+        value = initialValue;
+    }
+
+    /**
+     * Creates a new AtomicInteger with initial value {@code 0}.
+     */
+    public AtomicInteger() {
+    }
+</code></pre>
+<p>Unsafe 是 CAS 的核心类，由于 Java 方法无法直接访问底层系统，而需要通过本地（native）方法来访问， Unsafe 类相当一个后门，基于该类可以直接操作特定内存的数据。Unsafe 类存在于 sun.misc 包中，其内部方法操作可以像 C 指针一样直接操作内存，因为 Java 中 CAS 操作执行依赖于 Unsafe 类。<br>
+变量 vauleOffset，表示该变量值在内存中的偏移量，因为 Unsafe 就是根据内存偏移量来获取数据的。<br>
+变量 value 用 volatile 修饰，保证了多线程之间的内存可见性。</p>
+<h4 id="atomicinteger示例代码">AtomicInteger示例代码</h4>
+<pre><code class="language-java">import java.util.concurrent.atomic.AtomicInteger;
+
+public class AtomicDemo {
+
+    public static void main(String[] args) {
+
+        AtomicInteger i = new AtomicInteger(2019);
+        System.out.println(i.compareAndSet(2019, 2020));  //true
+        System.out.println(i); //2020
+        
+        AtomicInteger n = new AtomicInteger();
+        System.out.println(n.compareAndSet(2019, 2020)); //false
+        System.out.println(n); // 0
+    }
+}
+</code></pre>
+<p>除了JAVA提供的基本类型外还提供了AtuomicRefence 原子引用类，可以处理对象的原子类。</p>
+<h4 id="atomicrefence示例代码">AtomicRefence示例代码</h4>
+<pre><code class="language-java">import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class AtomicDemo {
+
+    public static void main(String[] args) {
+        User user = new User(&quot;zhangsan&quot;, 18);
+        AtomicReference atomicReference = new AtomicReference(user);
+        atomicReference.compareAndSet(user,new User(&quot;lisi&quot;,20));
+        System.out.println(atomicReference.get());
+    }
+}
+
+
+class User {
+    private String name;
+    private int age;
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;User{&quot; +
+                &quot;name='&quot; + name + '\'' +
+                &quot;, age=&quot; + age +
+                '}';
+    }
+
+}
+</code></pre>
+<h3 id="cas的缺点">CAS的缺点</h3>
+<ol>
+<li>循环时间长开销很大。如果 CAS 失败，会一直尝试，如果 CAS 长时间一直不成功，可能会给 CPU 带来很大的开销（比如线程数很多，每次比较都是失败，就会一直循环），所以希望是线程数比较小的场景。</li>
+<li>只能对一个共享变量进行原子操作，多个变量的情况不可用。</li>
+<li>会出现ABA问题</li>
+</ol>
+<h4 id="aba问题">ABA问题</h4>
+<p>两个线程修改共享变量，共享变量由A改为B，又由B改为A。此时另一个线程并不知道情况，以为共享变量的值没有改变，将共享变量的值修改。</p>
+<h5 id="代码示例">代码示例</h5>
+<pre><code class="language-java">import java.util.concurrent.atomic.AtomicInteger;
+
+public class AtomicABADemo {
+
+    public static void main(String[] args) {
+        AtomicInteger i = new AtomicInteger();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                i.compareAndSet(0,1);
+                System.out.println(&quot;i的值由0改为1&quot;);
+                i.compareAndSet(1,0);
+                System.out.println(&quot;i的值由1改为0&quot;);
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                i.compareAndSet(0,2019);
+                System.out.println(&quot;ABA问题出现——》i的值由0改为2019&quot;);
+            }
+        }).start();
+    }
+}
+</code></pre>
+<h4 id="解决方案">解决方案</h4>
+<p>java提供了一个带有版本号的原子引用类AtomicStampedRefence，实际上就是一个乐观锁。</p>
+<h5 id="代码示例-2">代码示例</h5>
+<pre><code class="language-java">import java.util.concurrent.atomic.AtomicStampedReference;
+
+public class AtomicDemo {
+    public static void main(String[] args) {
+        User user  = new User(&quot;zhangsan&quot;,18);
+        // 传入初始对象和版本号
+        AtomicStampedReference atomicStampedReference = new AtomicStampedReference(user,0);
+        User user1  = new User(&quot;lisi&quot;,20);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                atomicStampedReference.compareAndSet(user,user1,atomicStampedReference.getStamp(),atomicStampedReference.getStamp()+1);
+                System.out.println(&quot;版本号为&quot; + atomicStampedReference.getStamp() + &quot;，User对象信息为&quot; + atomicStampedReference.getReference());
+                atomicStampedReference.compareAndSet(user1,user,atomicStampedReference.getStamp(),atomicStampedReference.getStamp()+1);
+                System.out.println(&quot;版本号为&quot; + atomicStampedReference.getStamp() + &quot;，User对象信息为&quot; + atomicStampedReference.getReference());
+
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int stamp = atomicStampedReference.getStamp();
+                User user2  = new User(&quot;wangwu&quot;,28);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                atomicStampedReference.compareAndSet(user,user2,stamp,stamp++);
+                System.out.println(&quot;版本号为&quot; + atomicStampedReference.getStamp() + &quot;，User对象信息为&quot; + atomicStampedReference.getReference());
+
+
+            }
+        }).start();
+
+    }
+}
+
+
+class User {
+    private String name;
+    private int age;
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;User{&quot; +
+                &quot;name='&quot; + name + '\'' +
+                &quot;, age=&quot; + age +
+                '}';
+    }
+
+}
+</code></pre>
+<h2 id="java中的锁">Java中的锁</h2>
+<h3 id="公平锁与非公平锁">公平锁与非公平锁</h3>
+<ul>
+<li>公平锁：是指多个线程按照申请的顺序来获取值</li>
+<li>非公平锁：是值多个线程获取值的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁，在高并发的情况下，可能会造成优先级翻转或者饥饿现象</li>
+</ul>
+<h4 id="两者区别">两者区别</h4>
+<ul>
+<li>公平锁：在并发环境中，每一个线程在获取锁时会先查看此锁维护的等待队列，如果为空，或者当前线程是等待队列的第一个就占有锁，否者就会加入到等待队列中，以后会按照 FIFO 的规则获取锁</li>
+<li>非公平锁：一上来就尝试占有锁，如果失败在进行排队</li>
+</ul>
+<h5 id="代码示例-3">代码示例</h5>
+<pre><code class="language-java">/**
+     * Creates an instance of {@code ReentrantLock}.
+     * This is equivalent to using {@code ReentrantLock(false)}.
+     */
+    public ReentrantLock() {
+        sync = new NonfairSync();
+    }
+
+    /**
+     * Creates an instance of {@code ReentrantLock} with the
+     * given fairness policy.
+     *
+     * @param fair {@code true} if this lock should use a fair ordering policy
+     */
+    public ReentrantLock(boolean fair) {
+        sync = fair ? new FairSync() : new NonfairSync();
+    }
+</code></pre>
+<p>ReentrantLock的构造方法中可传入一个boolean值，表示是否是公平锁。默认为非公平锁。 synchronized是一种非公平锁。</p>
+<h3 id="可重入锁递归锁和不可重入锁">可重入锁（递归锁）和不可重入锁</h3>
+<ul>
+<li>可重入锁：指的是同一个线程外层函数获得锁之后，内层仍然能获取到该锁，在同一个线程在外层方法获取锁的时候，在进入内层方法或会自动获取该锁。</li>
+<li>不可重入锁： 若当前线程执行某个方法已经获取了该锁，那么在方法中尝试再次获取锁时，就会获取不到被阻塞。</li>
+</ul>
+<h5 id="代码示例-4">代码示例</h5>
+<pre><code class="language-java">public class ReentrantLockDemo {
+    public static void main(String[] args) {
+        method1();
+    }
+    public static synchronized void method1(){
+        System.out.println(&quot;method1执行&quot;);
+        method2();
+    }
+
+    public static synchronized void method2(){
+        System.out.println(&quot;method2执行&quot;);
+    }
+}
+</code></pre>
+<p>在main方法中调用method1()发现两个方法都执行了，说明synchronized是可重入锁。ReentrantLock也是可重入锁。</p>
+<h3 id="自旋锁-cas原理">自旋锁 (CAS原理)</h3>
+<ul>
+<li>尝试获取锁的线程不会立即堵塞，而是采用循环的方式去尝试获取锁，这样的好处是减少线程上线文切换的消耗，缺点就是循环会消耗 CPU。</li>
+</ul>
+<h5 id="代码示例-5">代码示例</h5>
+<pre><code class="language-java">import java.util.concurrent.atomic.AtomicReference;
+
+public class SpinLockTest {
+    public static void main(String[] args) {
+        SpinLock spinLock = new SpinLock();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                spinLock.lock();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(&quot;------------&quot;);
+                spinLock.unlock();
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                spinLock.lock();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(&quot;++++++++++++&quot;);
+                spinLock.unlock();
+            }
+        }).start();
+
+    }
+}
+
+class SpinLock {
+   private AtomicReference&lt;Thread&gt; atomicReference = new AtomicReference();
+    public void lock() {
+        Thread thread = Thread.currentThread();
+        while (!atomicReference.compareAndSet(null, thread)) {
+
+        }
+        System.out.println(thread.getName() + &quot;获取锁&quot;);
+    }
+    public void unlock() {
+        Thread thread = Thread.currentThread();
+        atomicReference.compareAndSet(thread, null);
+        System.out.println(thread.getName() + &quot;释放锁&quot;);
+    }
+}
+/*
+Thread-0获取锁
+------------
+Thread-0释放锁
+Thread-1获取锁
+++++++++++++
+Thread-1释放锁
+*/
+</code></pre>
+<p>输出结果表示加锁成功。获取锁的时候，如果原子引用为空就获取锁，不为空表示有人获取了锁，就循环等待。</p>
+<h3 id="独占锁与共享锁读写锁">独占锁与共享锁（读写锁）</h3>
+<ul>
+<li>独占锁：指该锁一次只能被一个线程持有</li>
+<li>共享锁：该锁可以被多个线程持有</li>
+</ul>
+<h4 id="分类">分类</h4>
+<ul>
+<li>Java中的ReentrantLock和synchronized都是独占锁。ReentrantReadWriteLock中的ReadLock是共享锁，WriteLock是独占锁。多个线程可以同时持有ReadLock，读写·写读·写写都是互斥的。</li>
+</ul>
+<h5 id="代码示例-6">代码示例</h5>
+<pre><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class ReentrantReadWriteLockTest {
+
+    public static void main(String[] args) {
+        ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+        List list = new ArrayList();
+
+
+        for(int i = 0;i &lt; 20 ; i++){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    readWriteLock.writeLock().lock();
+                    System.out.println(Thread.currentThread() + &quot;写开始&quot;);
+                    list.add(Math.round(Math.random()*100));
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(Thread.currentThread() + &quot;写结束&quot;);
+                    readWriteLock.writeLock().unlock();
+                }
+            }).start();
+
+        }
+
+        for(int i = 0;i &lt; 20 ; i++){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    readWriteLock.readLock().lock();
+                    System.out.println(Thread.currentThread() + &quot;读开始&quot;);
+                    System.out.println(list);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(Thread.currentThread() + &quot;读结束&quot;);
+                    readWriteLock.readLock().unlock();
+                }
+            }).start();
+        }
+    }
+}
+</code></pre>
+<h3 id="synchronized-和-lock">synchronized 和 Lock</h3>
+<h3 id="原始结构">原始结构</h3>
+<ul>
+<li>synchronized 是关键字属于 JVM 层面，反应在字节码上是 monitorenter 和 monitorexit，其底层是通过 monitor 对象来完成，其实 wait/notify 等方法也是依赖 monitor 对象只有在同步快或方法中才能调用 wait/notify 等方法。</li>
+<li>Lock 是具体类（java.util.concurrent.locks.Lock）是 api 层面的锁。</li>
+</ul>
+<h5 id="使用方法">使用方法</h5>
+<ul>
+<li>synchronized 不需要用户手动去释放锁，当 synchronized 代码执行完后系统会自动让线程释放对锁的占用。</li>
+<li>ReentrantLock 则需要用户手动的释放锁，若没有主动释放锁，可能导致出现死锁的现象，lock() 和 unlock() 方法需要配合 try/finally 语句来完成。</li>
+</ul>
+<h5 id="等待是否可中断">等待是否可中断</h5>
+<ul>
+<li>synchronized 不可中断，除非抛出异常或者正常运行完成。</li>
+<li>ReentrantLock 可中断，设置超时方法 tryLock(long timeout, TimeUnit unit)，lockInterruptibly() 放代码块中，调用 interrupt() 方法可中断。</li>
+</ul>
+<h5 id="加锁是否公平">加锁是否公平</h5>
+<ul>
+<li>synchronized 非公平锁</li>
+<li>ReentrantLock 默认非公平锁，构造方法中可以传入 boolean 值，true 为公平锁，false 为非公平锁。</li>
+</ul>
+<h5 id="锁可以绑定多个-condition">锁可以绑定多个 Condition</h5>
+<ul>
+<li>synchronized 没有 Condition。</li>
+<li>ReentrantLock 用来实现分组唤醒需要唤醒的线程们，可以精确唤醒，而不是像 synchronized 要么随机唤醒一个线程要么唤醒全部线程。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>synchronized</th>
+<th>Lock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>存在层次</td>
+<td>Java的关键字，在jvm层面上</td>
+<td>是一个类</td>
+</tr>
+<tr>
+<td>锁的释放</td>
+<td>1、以获取锁的线程执行完同步代码，释放锁 2、线程执行发生异常，jvm会让线程释放锁</td>
+<td>在finally中必须释放锁，不然容易造成线程死锁</td>
+</tr>
+<tr>
+<td>锁的获取</td>
+<td>假设A线程获得锁，B线程等待。如果A线程阻塞，B线程会一直等待</td>
+<td>分情况而定，Lock有多个锁获取的方式，具体下面会说道，大致就是可以尝试获得锁，线程可以不用一直等待</td>
+</tr>
+<tr>
+<td>锁状态</td>
+<td>无法判断</td>
+<td>可以判断</td>
+</tr>
+<tr>
+<td>锁类型</td>
+<td>可重入 不可中断 非公平</td>
+<td>可重入 可判断 可公平（两者皆可）</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>少量同步</td>
+<td>大量同步</td>
+</tr>
+</tbody>
+</table>
+<p>JDK1.6以后，为了减少获得锁和释放锁所带来的性能消耗，提高性能，引入了“轻量级锁”和“偏向锁”。官方更建议使用synchronized。<a href="https://blog.csdn.net/lengxiao1993/article/details/81568130">详情见Java中的偏向锁，轻量级锁， 重量级锁解析</a></p>
+<h5 id="代码示例synchronized实现生产消费模型">代码示例:synchronized实现生产消费模型</h5>
+<pre><code class="language-java">import java.util.concurrent.TimeUnit;
+
+public class ProdConsume_Synchronized {
+    private int count = 0;
+    public static final int FULL = 10;
+    private volatile boolean flag = true;
+    private Object lock;
+
+    public ProdConsume_Synchronized(Object lock) {
+        this.lock = lock;
+    }
+
+    public static void main(String[] args) {
+        Object lock = new Object();
+        ProdConsume_Synchronized prodConsume_synchronized = new ProdConsume_Synchronized(lock);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    prodConsume_synchronized.consume();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    prodConsume_synchronized.prod();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        prodConsume_synchronized.flag = false;
+    }
+
+    public void prod() throws InterruptedException {
+        while (flag) {
+            synchronized (lock) {
+                while (count == FULL) {
+                    lock.wait();
+                }
+                count++;
+                long round = Math.round(Math.random() * 1000);
+                Thread.sleep(round);
+                System.out.println(round + &quot;号商品生产完毕，还有&quot; + count + &quot;个商品&quot;);
+                lock.notifyAll();
+
+            }
+        }
+    }
+
+    public void consume() throws InterruptedException {
+        while (flag) {
+            synchronized (lock) {
+                while (count == 0) {
+                    lock.wait();
+                }
+                count--;
+                Thread.sleep(500);
+                System.out.println(&quot;取走一个商品，还有&quot; + count + &quot;个商品&quot;);
+                lock.notifyAll();
+
+            }
+        }
+    }
+}
+
+输出结果
+
+643号商品生产完毕，还有1个商品
+322号商品生产完毕，还有2个商品
+819号商品生产完毕，还有3个商品
+877号商品生产完毕，还有4个商品
+112号商品生产完毕，还有5个商品
+904号商品生产完毕，还有6个商品
+978号商品生产完毕，还有7个商品
+569号商品生产完毕，还有8个商品
+949号商品生产完毕，还有9个商品
+661号商品生产完毕，还有10个商品
+取走一个商品，还有9个商品
+取走一个商品，还有8个商品
+取走一个商品，还有7个商品
+取走一个商品，还有6个商品
+取走一个商品，还有5个商品
+取走一个商品，还有4个商品
+取走一个商品，还有3个商品
+124号商品生产完毕，还有4个商品
+</code></pre>
+<h5 id="代码示例reentrantlock实现生产消费模型">代码示例:ReentrantLock实现生产消费模型</h5>
+<pre><code class="language-java">import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class ProdConsume_ReentrantLock {
+    private int count = 0;
+    public static final int FULL = 10;
+    private volatile boolean flag = true;
+    private Lock lock = new ReentrantLock();
+    private Condition condition_prod = lock.newCondition();
+    private Condition condition_consume = lock.newCondition();
+
+    public static void main(String[] args) {
+        ProdConsume_ReentrantLock prodConsume_reentrantLock = new ProdConsume_ReentrantLock();
+        for (int i = 0; i &lt; 3; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    prodConsume_reentrantLock.prod();
+                }
+            }).start();
+        }
+
+
+        for (int i = 0; i &lt; 3; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    prodConsume_reentrantLock.consume();
+                }
+            }).start();
+        }
+
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        prodConsume_reentrantLock.flag = false;
+    }
+
+    public void prod() {
+        while (flag) {
+            try {
+                lock.lock();
+                try {
+                    while (count == FULL) {
+                        condition_prod.await();
+                    }
+                    count++;
+                    long round = Math.round(Math.random() * 1000);
+                    Thread.sleep(round);
+                    System.out.println(round + &quot;号商品生产完毕，还有&quot; + count + &quot;个商品&quot;);
+                    condition_consume.signalAll();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+
+    public void consume() {
+        while (flag) {
+            try {
+                lock.lock();
+                try {
+                    while (count == 0) {
+                        condition_consume.await();
+                    }
+                    count--;
+                    Thread.sleep(500);
+                    System.out.println(&quot;取走一个商品，还有&quot; + count + &quot;个商品&quot;);
+                    condition_prod.signalAll();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+}
+</code></pre>
+<h5 id="代码示例reentrantlock实现精准唤醒">代码示例:ReentrantLock实现精准唤醒</h5>
+<pre><code class="language-java">import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class PrecisionWeakUp_ReentrantLock {
+    private final Lock lock = new ReentrantLock();
+    private Condition conditionA = lock.newCondition();
+    private Condition conditionB = lock.newCondition();
+    private Condition conditionC = lock.newCondition();
+    private int flag = 1;
+
+    // 多线程下先输出五次A 再输出五次B 再输出五次C
+    public static void main(String[] args) {
+        PrecisionWeakUp_ReentrantLock precisionWeakUp_reentrantLock = new PrecisionWeakUp_ReentrantLock();
+        for(int i = 0;i &lt; 3;i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        precisionWeakUp_reentrantLock.printA();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+
+        for(int i = 0;i &lt; 3;i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        precisionWeakUp_reentrantLock.printB();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+
+        for(int i = 0;i &lt; 3;i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        precisionWeakUp_reentrantLock.printC();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+
+    }
+
+    public void printA() throws InterruptedException {
+        try {
+            lock.lock();
+            while (flag != 1) {
+                conditionA.await();
+            }
+            for (int i = 0; i &lt; 5; i++) {
+                System.out.println(&quot;A&quot;);
+            }
+            flag = 2;
+            conditionB.signalAll();
+        }finally {
+            lock.unlock();
+        }
+    }
+    public void printB() throws InterruptedException {
+        try {
+            lock.lock();
+            while (flag != 2) {
+                conditionB.await();
+            }
+            for (int i = 0; i &lt; 5; i++) {
+                System.out.println(&quot;B&quot;);
+            }
+            flag = 3;
+            conditionC.signalAll();
+        }finally {
+            lock.unlock();
+        }
+    }
+    public void printC() throws InterruptedException {
+        try {
+            lock.lock();
+            while (flag != 3) {
+                conditionC.await();
+            }
+            for (int i = 0; i &lt; 5; i++) {
+                System.out.println(&quot;C&quot;);
+            }
+            flag = 1;
+            conditionA.signalAll();
+        }finally {
+            lock.unlock();
+        }
+    }
+}
+</code></pre>
+<h2 id="juc包的并发工具类">JUC包的并发工具类</h2>
+<h3 id="countdownlatch">CountDownLatch</h3>
+<blockquote>
+<p>CountDownLatch中count down是倒数的意思，latch则是门闩的含义。整体含义可以理解为倒数的门栓。在构造CountDownLatch的时候需要传入一个整数n，在这个整数“倒数”到0之前，主线程需要等待在门口，而这个“倒数”过程则是由各个执行线程驱动的，每个线程执行完一个任务“倒数”一次。总结来说，CountDownLatch的作用就是等待其他的线程都执行完任务，必要时可以对各个任务的执行结果进行汇总，然后主线程才继续往下执行。</p>
+</blockquote>
+<h4 id="countdownlatch主要有两个方法countdown和await">CountDownLatch主要有两个方法：countDown()和await()。</h4>
+<ul>
+<li>countDown()方法用于使计数器减一，其一般是执行任务的线程调用，</li>
+<li>await()方法则使调用该方法的线程处于等待状态，其一般是主线程调用。</li>
+</ul>
+<p>这里需要注意的是，countDown()方法并没有规定一个线程只能调用一次，当同一个线程调用多次countDown()方法时，每次都会使计数器减一；另外，await()方法也并没有规定只能有一个线程执行该方法，如果多个线程同时执行await()方法，那么这几个线程都将处于等待状态，并且以共享模式享有同一个锁。</p>
+<h5 id="代码示例-7">代码示例</h5>
+<pre><code class="language-java">import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+public class CountDownLatchDemo {
+    public static void main(String[] args) {
+        List list = new ArrayList();
+        List synchronizedList = Collections.synchronizedList(list);
+        CountDownLatch countDownLatch = new CountDownLatch(5);
+        for(int i = 0;i &lt; 5;i++){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    long round = Math.round(Math.random() * 100);
+                    synchronizedList.add(round);
+                    System.out.println(round + &quot;添加进List&quot;);
+                    countDownLatch.countDown();
+
+                }
+            }).start();
+        }
+
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(synchronizedList);
+    }
+}
+
+输出结果
+
+68添加进List
+91添加进List
+57添加进List
+12添加进List
+98添加进List
+[68, 57, 12, 98, 91]
+</code></pre>
+<p>CountDownLatch非常适合于对任务进行拆分，使其并行执行，比如某个任务执行2s，其对数据的请求可以分为五个部分，那么就可以将这个任务拆分为5个子任务，分别交由五个线程执行，执行完成之后再由主线程进行汇总，此时，总的执行时间将决定于执行最慢的任务，平均来看，还是大大减少了总的执行时间。</p>
+<h3 id="cyclicbarrier">CyclicBarrier</h3>
+<blockquote>
+<p>CyclicBarrier同步屏障，可以让一组线程达到一个屏障时被阻塞，直到最后一个线程达到屏障时，所以被阻塞的线程才能继续执行。<br>
+CyclicBarrier好比一扇门，默认情况下关闭状态，堵住了线程执行的道路，直到所有线程都就位，门才打开，让所有线程一起通过。</p>
+</blockquote>
+<h4 id="cyclicbarrier的构造方法">CyclicBarrier的构造方法</h4>
+<ul>
+<li>CyclicBarrier(int parties)：创建一个新的 CyclicBarrier，它将在给定数量的参与者（线程）处于等待状态时启动，但它不会在启动 barrier 时执行预定义的操作。</li>
+<li>CyclicBarrier(int parties, Runnable barrierAction) ：创建一个新的 CyclicBarrier，它将在给定数量的参与者（线程）处于等待状态时启动，并在启动 barrier 时执行给定的屏障操作，该操作由最后一个进入 barrier 的线程执行。</li>
+</ul>
+<h5 id="代码示例-8">代码示例</h5>
+<pre><code class="language-java">import java.util.concurrent.BrokenBarrierException;
+        import java.util.concurrent.CyclicBarrier;
+
+public class CyclicBarrierDemo {
+    public static void main(String[] args) {
+        //景区观光车循环发车，每一辆车一个五个座位，坐满发车
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(5, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(&quot;人员已到位，出发&quot;);
+            }
+        });
+
+        for(int i = 1;i &lt;= 5;i++){
+            final int n = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println(n + &quot;号游客上车&quot;);
+                    try {
+                        cyclicBarrier.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (BrokenBarrierException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+
+        for(int i = 6;i &lt;= 10;i++){
+            final int n = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println(n + &quot;号游客上车&quot;);
+                    try {
+                        cyclicBarrier.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (BrokenBarrierException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+    }
+}
+</code></pre>
+<p>输出结果</p>
+<pre><code>1号游客上车
+3号游客上车
+2号游客上车
+5号游客上车
+4号游客上车
+人员已到位，出发
+6号游客上车
+7号游客上车
+8号游客上车
+9号游客上车
+10号游客上车
+人员已到位，出发
+</code></pre>
+<p>每当线程执行await，内部变量count减1，如果count！= 0，说明有线程还未到屏障处，则在锁条件变量trip上等待。<br>
+当count == 0时，说明所有线程都已经到屏障处，执行条件变量的signalAll方法唤醒等待的线程。</p>
+<h3 id="countdownlatch与cyclicbarrier比较">CountDownLatch与CyclicBarrier比较</h3>
+<table>
+<thead>
+<tr>
+<th>CountDownLatch</th>
+<th>CyclicBarrier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>减计数方式</td>
+<td>加计数方式</td>
+</tr>
+<tr>
+<td>计算为0时释放所有等待的线程</td>
+<td>计数达到指定值时释放所有等待线程</td>
+</tr>
+<tr>
+<td>计数为0时，无法重置</td>
+<td>计数达到指定值时，计数置为0重新开始</td>
+</tr>
+<tr>
+<td>调用countDown()方法计数减一，调用await()方法只进行阻塞，对计数没任何影响</td>
+<td>调用await()方法计数加1，若加1后的值不等于构造方法的值，则线程阻塞</td>
+</tr>
+<tr>
+<td>不可重复利用可重复利用</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="semaphore">Semaphore</h3>
+<blockquote>
+<p>ReentrantLock和Synchronized一次都只允许一个线程访问一个资源。Semaphore允许多个线程同时访问同一个资源。<br>
+Semaphore管理着一组许可（permit），许可的初始数量可以通过构造函数设定，操作时首先要获取到许可，才能进行操作，操作完成后需要释放许可。如果没有获取许可，则阻塞到有许可被释放。如果初始化了一个许可为1的Semaphore，那么就相当于一个不可重入的互斥锁。其中0、1就相当于它的状态，当=1时表示其他线程可以获取，当=0时，排他，即其他线程必须要等待。</p>
+</blockquote>
+<h4 id="semaphore的构造方法">Semaphore的构造方法</h4>
+<ul>
+<li>Semaphore(int permits) ：创建具有给定的许可数和非公平的公平设置的 Semaphore，默认非公平锁。</li>
+<li>Semaphore(int permits, boolean fair) ：创建具有给定的许可数和给定的公平设置的 Semaphore。</li>
+</ul>
+<h5 id="代码示例-9">代码示例</h5>
+<pre><code class="language-java">import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+public class SemaphoreDemo {
+    public static void main(String[] args) {
+        // 六个车抢三个车位
+        Semaphore semaphore = new Semaphore(3);
+        for(int i = 1;i &lt;= 6;i++){
+            final int n = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        semaphore.acquire();
+                        System.out.println(n + &quot;号抢到车位——————————&quot;);
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }finally {
+                        System.out.println(n + &quot;号离开车位++++++++++&quot;);
+                        semaphore.release();
+                    }
+                }
+            }).start();
+        }
+    }
+}
+</code></pre>
+<p>输出结果</p>
+<pre><code>1号抢到车位——————————
+2号抢到车位——————————
+3号抢到车位——————————
+2号离开车位++++++++++
+1号离开车位++++++++++
+3号离开车位++++++++++
+4号抢到车位——————————
+6号抢到车位——————————
+5号抢到车位——————————
+6号离开车位++++++++++
+4号离开车位++++++++++
+5号离开车位++++++++++
+</code></pre>
+<p>Semaphore在限制流量方面有非常多的应用，比如程序跑批高峰时几万个数据库的连接同时操作，为了不影响其他用户访问只允许同时开放十条连接。</p>
+<h2 id="线程安全的集合类">线程安全的集合类</h2>
+<blockquote>
+<p>Java中的集合包括三大类，它们是Set、List和Map它们都处于java.util包中，Set、List和Map都是接口，它们有各自的实现类。</p>
+</blockquote>
+<h3 id="list列表">List（列表）</h3>
+<blockquote>
+<ul>
+<li>实现类主要有ArrayList，LinkedList，Vector</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>ArrayList,LinkedList为线程不安全的集合类，ArrayList底层是数组而LinkedList底层实现为链表。Vector和ArrayList类似，是长度可变的数组。Vector是线程安全的，它给几乎所有的public方法都加上了synchronized关键字。由于加锁导致性能降低，在不需要并发访问同一对象时，这种强制性的同步机制就显得多余，所以现在Vector已被弃用。</p>
+</blockquote>
+<h3 id="set集">Set（集）</h3>
+<blockquote>
+<ul>
+<li>实现类主要有HashSet，TreeSet</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>HashSet是一个无序的集合，基于HashMap实现；TreeSet是一个有序的集合，基于TreeMap实现。HashSet集合中允许有null元素，TreeSet集合中不允许有null元素。HashSet和TreeSet都是线程不安全的。</p>
+</blockquote>
+<h3 id="map映射">Map（映射）</h3>
+<blockquote>
+<ul>
+<li>实现类主要有HashMap，TreeMap，HashTable</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>HashTable和HashMap类似，不同点是HashTable是线程安全的，它给几乎所有public方法都加上了synchronized关键字，还有一个不同点是HashTable的K，V都不能是null，但HashMap可以，它现在也因为性能原因被弃用。TreeMap也是线程不安全的。</p>
+</blockquote>
+<h3 id="除废弃的集合类外还有哪些方法可以保证线程安全">除废弃的集合类外还有哪些方法可以保证线程安全</h3>
+<h4 id="collections包装方法">Collections包装方法</h4>
+<ul>
+<li>Collections工具类中提供了相应的包装方法把它们包装成线程安全的集合</li>
+</ul>
+<pre><code>List&lt;E&gt; synArrayList = Collections.synchronizedList(new ArrayList&lt;E&gt;());
+Set&lt;E&gt; synHashSet = Collections.synchronizedSet(new HashSet&lt;E&gt;());
+Map&lt;K,V&gt; synHashMap = Collections.synchronizedMap(new HashMap&lt;K,V&gt;());
+</code></pre>
+<h4 id="javautilconcurrent包中的集合">java.util.concurrent包中的集合</h4>
+<h5 id="copyonwritearraylist和copyonwritearrayset">CopyOnWriteArrayList和CopyOnWriteArraySet</h5>
+<ul>
+<li>CopyOnWriteArrayList 中的set、add、remove等方法，都使用了ReentrantLock的lock来加锁， unlock来解锁当增加元素的时候使用Arrays.copyOf()来拷贝副本，在副本上增加元素，然后改变原来引用的指向副本。读操作不需要加锁，因此，CopyOnWriteArrayList类是一个线程安全的List接口实现，这对于读操作远远多于写操作的应用非常适合，特别是在并发的情况下，可以提供高性能的并发读取，并保证读取的内容一定是正确的，不受多线程并发问题的影响。</li>
+</ul>
+<h5 id="concurrenthashmap">ConcurrentHashMap</h5>
+<ul>
+<li>1.8版本的ConcurrentHashMap抛弃了原有的 Segment 分段锁，而采用了 CAS + synchronized 来保证并发安全性。详情见HashMap? ConcurrentHashMap? 相信看完这篇没人能难住你！</li>
+</ul>
+<h4 id="copyonwrite机制">CopyOnWrite机制</h4>
+<ul>
+<li>CopyOnWrite容器即写是复制的容器。通俗的理解就是当我们往一个容器添加元素的时候，不直接往当前容器添加，而是先将当前容器进行Copy，复制出一个新的容器，然后新的容器里添加元素，添加完元素后，再将原容器的引用指向新的容器。这样做的好处就是我们可以对CopyOnWrite容器进行并发的读，而不需要加锁，因为当前容器不会添加任何元素.所以，CopyOnWrite容器也是一种读写分离的思想。读和写不容的容器。</li>
+<li>ArrayList里添加元素，在添加的时候是需要加锁的，否则多线程写的时候会copy出多个副本出来<br>
+读的时候不需要加锁，如果读的时候有多线程正在像ArrayList中添加数据，还是会读到旧的数据，因为写的时候不会锁住旧的ArrayList</li>
+</ul>
+<h5 id="使用场景">使用场景</h5>
+<ul>
+<li>读多写少</li>
+</ul>
+<h5 id="使用注意点">使用注意点</h5>
+<ul>
+<li>减少扩容开销；b、使用批量添加</li>
+</ul>
+<h5 id="缺点">缺点</h5>
+<ul>
+<li>内存占用问题</li>
+<li>数据一致性问题</li>
+</ul>
+<h2 id="blockingqueue阻塞队列">BlockingQueue（阻塞队列）</h2>
+<blockquote>
+<p>在某些情况下对阻塞队列的访问可能会造成阻塞。被阻塞的情况主要有如下两种:</p>
+</blockquote>
+<ul>
+<li>当阻塞队列是空时，从队列中获取元素的操作将会被阻塞。</li>
+<li>当阻塞队列是满时，往队列里添加元素的操作将会被阻塞。</li>
+<li>当一个线程对已经满了的阻塞队列进行入队操作时会阻塞，除非有另外一个线程进行了出队操作，当一个线程对一个空的阻塞队列进行出队操作时也会阻塞，除非有另外一个线程进行了入队操作。</li>
+</ul>
+<h3 id="blockingqueue的七个实现类">BlockingQueue的七个实现类</h3>
+<ul>
+<li>ArrayBlockingQueue ：一个由数组结构组成的有界阻塞队列。</li>
+<li>LinkedBlockingQueue ：一个由链表结构组成的有界阻塞队列。</li>
+<li>PriorityBlockingQueue ：一个支持优先级排序的无界阻塞队列。</li>
+<li>DelayQueue：一个使用优先级队列实现的无界阻塞队列。</li>
+<li>SynchronousQueue：一个不存储元素的阻塞队列。</li>
+<li>LinkedTransferQueue：一个由链表结构组成的无界阻塞队列。</li>
+<li>LinkedBlockingDeque：一个由链表结构组成的双向阻塞队列。</li>
+</ul>
+<h3 id="blockingqueue阻塞队列的api">BlockingQueue阻塞队列的api</h3>
+<p>|操作|抛异常 ThrowsException|特定值 SpecialValue|阻塞 Blocks|超时 TimesOut|<br>
+|-|-|-|-|<br>
+|插入|add(o)	|offer(o)|put(o)|offer(o, timeout, timeunit)|<br>
+|移除|remove(o)|poll(o)|take(o)|poll(timeout, timeunit)|<br>
+|检查|	element(o)|	peek(o)	|</p>
+<h4 id="这四类方法分别对应的是">这四类方法分别对应的是：</h4>
+<ul>
+<li>ThrowsException ：如果操作不能马上进行，则抛出异常</li>
+<li>SpecialValue ：如果操作不能马上进行，将会返回一个特殊的值，一般是true或者false</li>
+<li>Blocks : 如果操作不能马上进行，操作会被阻塞</li>
+<li>TimesOut : 如果操作不能马上进行，操作会被阻塞指定的时间，如果指定时间没执行，则返回一个特殊值，一般是true或者false</li>
+</ul>
+<h5 id="插入方法">插入方法</h5>
+<p>add(E e)：添加成功返回true，失败抛 IllegalStateException 异常<br>
+offer(E e)：成功返回 true，如果此队列已满，则返回 false<br>
+put(E e)：将元素插入此队列的尾部，如果该队列已满，则一直阻塞</p>
+<h5 id="删除方法">删除方法</h5>
+<p>remove(Object o) ：移除指定元素,成功返回true，失败返回false<br>
+poll()：获取并移除此队列的头元素，若队列为空，则返回 null<br>
+take()：获取并移除此队列头元素，若没有元素则一直阻塞</p>
+<h5 id="检查方法">检查方法</h5>
+<p>element() ：获取但不移除此队列的头元素，没有元素则抛异常<br>
+peek() :获取但不移除此队列的头；若队列为空，则返回 null</p>
+<h4 id="blockingqueue实现生产消费模型">BlockingQueue实现生产消费模型</h4>
+<h5 id="代码示例-10">代码示例</h5>
+<pre><code class="language-java">import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class ProdConsume_BlockingQueue {
+
+    private AtomicInteger atomicInteger = new AtomicInteger();
+    private BlockingQueue blockingQueue;
+    private volatile boolean flag = true;
+
+
+    public ProdConsume_BlockingQueue(BlockingQueue blockingQueue) {
+        this.blockingQueue = blockingQueue;
+    }
+
+    public void prod() {
+        while (flag) {
+            try {
+                long round = Math.round(Math.random() * 1000);
+                Thread.sleep(round);
+                blockingQueue.put(round);
+                int i = atomicInteger.incrementAndGet();
+                System.out.println(round + &quot;号商品生产完毕放入队列，队列中还有&quot; + i + &quot;个商品&quot;);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void consum() {
+        while (flag) {
+            try {
+                Thread.sleep(500);
+                Object take = blockingQueue.take();
+                atomicInteger.decrementAndGet();
+                System.out.println(take + &quot;号商品被购买&quot;);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        BlockingQueue blockingQueue = new ArrayBlockingQueue(100);
+        ProdConsume_BlockingQueue prodConsume_blockingQueue = new ProdConsume_BlockingQueue(blockingQueue);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                prodConsume_blockingQueue.prod();
+            }
+        }).start();
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                prodConsume_blockingQueue.consum();
+            }
+        }).start();
+
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        prodConsume_blockingQueue.flag = false;
+    }
+}
+输出结果
+</code></pre>
+<pre><code>180号商品生产完毕放入队列，队列中还有1个商品
+180号商品被购买
+331号商品生产完毕放入队列，队列中还有1个商品
+201号商品生产完毕放入队列，队列中还有2个商品
+331号商品被购买
+201号商品被购买
+897号商品生产完毕放入队列，队列中还有1个商品
+897号商品被购买
+588号商品生产完毕放入队列，队列中还有1个商品
+217号商品生产完毕放入队列，队列中还有2个商品
+588号商品被购买
+154号商品生产完毕放入队列，队列中还有2个商品
+217号商品被购买
+592号商品生产完毕放入队列，队列中还有2个商品
+154号商品被购买
+442号商品生产完毕放入队列，队列中还有2个商品
+592号商品被购买
+712号商品生产完毕放入队列，队列中还有2个商品
+442号商品被购买
+712号商品被购买
+893号商品生产完毕放入队列，队列中还有1个商品
+15号商品生产完毕放入队列，队列中还有2个商品
+893号商品被购买
+496号商品生产完毕放入队列，队列中还有2个商品
+4号商品生产完毕放入队列，队列中还有3个商品
+15号商品被购买
+534号商品生产完毕放入队列，队列中还有3个商品
+172号商品生产完毕放入队列，队列中还有4个商品
+496号商品被购买
+4号商品被购买
+891号商品生产完毕放入队列，队列中还有3个商品
+534号商品被购买
+414号商品生产完毕放入队列，队列中还有3个商品
+172号商品被购买
+891号商品被购买
+920号商品生产完毕放入队列，队列中还有2个商品
+71号商品生产完毕放入队列，队列中还有3个商品
+144号商品生产完毕放入队列，队列中还有4个商品
+414号商品被购买
+586号商品生产完毕放入队列，队列中还有4个商品
+920号商品被购买
+71号商品被购买
+553号商品生产完毕放入队列，队列中还有3个商品
+</code></pre>
+<h2 id="实现多线程的几种方式">实现多线程的几种方式</h2>
+<h3 id="继承thread类重写run方法">继承Thread类，重写run方法</h3>
+<p>略</p>
+<h3 id="实现runnable接口重写run方法">实现Runnable接口，重写run方法</h3>
+<p>略</p>
+<h3 id="实现callable接口重写call方法通过futuretask包装器来创建thread线程">实现Callable接口，重写call方法，通过FutureTask包装器来创建Thread线程</h3>
+<h4 id="runnable和callable的区别">Runnable和Callable的区别：</h4>
+<ul>
+<li>Callable规定的方法是call(),Runnable规定的方法是run().</li>
+<li>Callable的任务执行后可返回值，而Runnable的任务是不能返回值得</li>
+<li>call方法可以抛出异常，run方法不可以</li>
+</ul>
+<p>运行Callable任务可以拿到一个Future对象，表示异步计算的结果。它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果。</p>
+<h4 id="future接口">Future接口</h4>
+<ul>
+<li>Future是一个接口，代表了一个异步计算的结果。接口中的方法用来检查计算是否完成、等待完成和得到计算的结果。</li>
+<li>当计算完成后，只能通过get()方法得到结果，get方法会阻塞直到结果准备好了。</li>
+<li>如果想取消，那么调用cancel()方法。其他方法用于确定任务是正常完成还是取消了。一旦计算完成了，那么这个计算就不能被取消。</li>
+</ul>
+<h4 id="futuretask类">FutureTask类</h4>
+<ul>
+<li>FutureTask类实现了RunnableFuture接口，而RunnnableFuture接口继承了Runnable和Future接口，所以说FutureTask是一个提供异步计算的结果的任务。</li>
+<li>FutureTask可以用来包装Callable或者Runnbale对象。因为FutureTask实现了Runnable接口，所以FutureTask也可以被提交给Executor。</li>
+</ul>
+<h4 id="callable两种执行方式">Callable两种执行方式</h4>
+<h5 id="借助futuretask执行">借助FutureTask执行</h5>
+<p>FutureTask类同时实现了两个接口，Future和Runnable接口，所以它既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值。<br>
+** 代码示例 **</p>
+<pre><code class="language-java">import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+
+public class CallableDemo {
+    public static void main(String[] args) {
+        FutureTask&lt;Integer&gt; futureTask = new FutureTask&lt;&gt;(new Callable&lt;Integer&gt;() {
+            @Override
+            public Integer call() throws Exception {
+                System.out.println(&quot;Callable&quot;);
+                Thread.sleep(1000);
+                return (int)(Math.random()*100);
+            }
+        });
+        futureTask.run();
+        //如果没有执行完一直阻塞
+        while (!futureTask.isDone()){
+        }
+        Integer integer = null;
+        try {
+            integer = futureTask.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        System.out.println(integer);
+    }
+}
+</code></pre>
+<h5 id="借助线程池来运行">借助线程池来运行</h5>
+<p>↓</p>
+<h3 id="线程池threadpoolexecuter">线程池ThreadPoolExecuter</h3>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#volatile%E5%85%B3%E9%94%AE%E5%AD%97">volatile关键字</a>
+<ul>
+<li><a href="#jmmjava-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B">JMM（Java 内存模型）</a>
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">基本概念</a>
+<ul>
+<li><a href="#%E5%8F%AF%E8%A7%81%E6%80%A7%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">可见性代码示例</a></li>
+<li><a href="#%E4%B8%8D%E4%BF%9D%E8%AF%81%E5%8E%9F%E5%AD%90%E6%80%A7%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">不保证原子性代码示例</a></li>
+<li><a href="#%E7%A6%81%E6%AD%A2%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92">禁止指令重排</a></li>
+<li><a href="#volatile%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E5%8F%8C%E7%AB%AF%E6%A3%80%E9%94%81%E5%8D%95%E4%BE%8B">volatile常见用法（双端检锁单例）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#cas-compareandswap%E6%AF%94%E8%BE%83%E5%B9%B6%E4%BA%A4%E6%8D%A2">CAS （CompareAndSwap）比较并交换</a>
+<ul>
+<li><a href="#unsafe%E7%B1%BB">UnSafe类</a>
+<ul>
+<li><a href="#atomicinteger%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">AtomicInteger示例代码</a></li>
+<li><a href="#atomicrefence%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">AtomicRefence示例代码</a></li>
+</ul>
+</li>
+<li><a href="#cas%E7%9A%84%E7%BC%BA%E7%82%B9">CAS的缺点</a>
+<ul>
+<li><a href="#aba%E9%97%AE%E9%A2%98">ABA问题</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
+</ul>
+</li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解决方案</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-2">代码示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#java%E4%B8%AD%E7%9A%84%E9%94%81">Java中的锁</a>
+<ul>
+<li><a href="#%E5%85%AC%E5%B9%B3%E9%94%81%E4%B8%8E%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81">公平锁与非公平锁</a>
+<ul>
+<li><a href="#%E4%B8%A4%E8%80%85%E5%8C%BA%E5%88%AB">两者区别</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-3">代码示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E9%80%92%E5%BD%92%E9%94%81%E5%92%8C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81">可重入锁（递归锁）和不可重入锁</a><br>
+*
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-4">代码示例</a></li>
+</ul>
+</li>
+<li><a href="#%E8%87%AA%E6%97%8B%E9%94%81-cas%E5%8E%9F%E7%90%86">自旋锁 (CAS原理)</a><br>
+*
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-5">代码示例</a></li>
+</ul>
+</li>
+<li><a href="#%E7%8B%AC%E5%8D%A0%E9%94%81%E4%B8%8E%E5%85%B1%E4%BA%AB%E9%94%81%E8%AF%BB%E5%86%99%E9%94%81">独占锁与共享锁（读写锁）</a>
+<ul>
+<li><a href="#%E5%88%86%E7%B1%BB">分类</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-6">代码示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#synchronized-%E5%92%8C-lock">synchronized 和 Lock</a></li>
+<li><a href="#%E5%8E%9F%E5%A7%8B%E7%BB%93%E6%9E%84">原始结构</a><br>
+*
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">使用方法</a></li>
+<li><a href="#%E7%AD%89%E5%BE%85%E6%98%AF%E5%90%A6%E5%8F%AF%E4%B8%AD%E6%96%AD">等待是否可中断</a></li>
+<li><a href="#%E5%8A%A0%E9%94%81%E6%98%AF%E5%90%A6%E5%85%AC%E5%B9%B3">加锁是否公平</a></li>
+<li><a href="#%E9%94%81%E5%8F%AF%E4%BB%A5%E7%BB%91%E5%AE%9A%E5%A4%9A%E4%B8%AA-condition">锁可以绑定多个 Condition</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8Bsynchronized%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%9E%8B">代码示例:synchronized实现生产消费模型</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8Breentrantlock%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%9E%8B">代码示例:ReentrantLock实现生产消费模型</a></li>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8Breentrantlock%E5%AE%9E%E7%8E%B0%E7%B2%BE%E5%87%86%E5%94%A4%E9%86%92">代码示例:ReentrantLock实现精准唤醒</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#juc%E5%8C%85%E7%9A%84%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB">JUC包的并发工具类</a>
+<ul>
+<li><a href="#countdownlatch">CountDownLatch</a>
+<ul>
+<li><a href="#countdownlatch%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E6%96%B9%E6%B3%95countdown%E5%92%8Cawait">CountDownLatch主要有两个方法：countDown()和await()。</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-7">代码示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#cyclicbarrier">CyclicBarrier</a>
+<ul>
+<li><a href="#cyclicbarrier%E7%9A%84%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">CyclicBarrier的构造方法</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-8">代码示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#countdownlatch%E4%B8%8Ecyclicbarrier%E6%AF%94%E8%BE%83">CountDownLatch与CyclicBarrier比较</a></li>
+<li><a href="#semaphore">Semaphore</a>
+<ul>
+<li><a href="#semaphore%E7%9A%84%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">Semaphore的构造方法</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-9">代码示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB">线程安全的集合类</a>
+<ul>
+<li><a href="#list%E5%88%97%E8%A1%A8">List（列表）</a></li>
+<li><a href="#set%E9%9B%86">Set（集）</a></li>
+<li><a href="#map%E6%98%A0%E5%B0%84">Map（映射）</a></li>
+<li><a href="#%E9%99%A4%E5%BA%9F%E5%BC%83%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB%E5%A4%96%E8%BF%98%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E6%B3%95%E5%8F%AF%E4%BB%A5%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8">除废弃的集合类外还有哪些方法可以保证线程安全</a>
+<ul>
+<li><a href="#collections%E5%8C%85%E8%A3%85%E6%96%B9%E6%B3%95">Collections包装方法</a></li>
+<li><a href="#javautilconcurrent%E5%8C%85%E4%B8%AD%E7%9A%84%E9%9B%86%E5%90%88">java.util.concurrent包中的集合</a>
+<ul>
+<li><a href="#copyonwritearraylist%E5%92%8Ccopyonwritearrayset">CopyOnWriteArrayList和CopyOnWriteArraySet</a></li>
+<li><a href="#concurrenthashmap">ConcurrentHashMap</a></li>
+</ul>
+</li>
+<li><a href="#copyonwrite%E6%9C%BA%E5%88%B6">CopyOnWrite机制</a>
+<ul>
+<li><a href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">使用场景</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E7%82%B9">使用注意点</a></li>
+<li><a href="#%E7%BC%BA%E7%82%B9">缺点</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#blockingqueue%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97">BlockingQueue（阻塞队列）</a>
+<ul>
+<li><a href="#blockingqueue%E7%9A%84%E4%B8%83%E4%B8%AA%E5%AE%9E%E7%8E%B0%E7%B1%BB">BlockingQueue的七个实现类</a></li>
+<li><a href="#blockingqueue%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%9A%84api">BlockingQueue阻塞队列的api</a>
+<ul>
+<li><a href="#%E8%BF%99%E5%9B%9B%E7%B1%BB%E6%96%B9%E6%B3%95%E5%88%86%E5%88%AB%E5%AF%B9%E5%BA%94%E7%9A%84%E6%98%AF">这四类方法分别对应的是：</a>
+<ul>
+<li><a href="#%E6%8F%92%E5%85%A5%E6%96%B9%E6%B3%95">插入方法</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95">删除方法</a></li>
+<li><a href="#%E6%A3%80%E6%9F%A5%E6%96%B9%E6%B3%95">检查方法</a></li>
+</ul>
+</li>
+<li><a href="#blockingqueue%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%9E%8B">BlockingQueue实现生产消费模型</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-10">代码示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F">实现多线程的几种方式</a>
+<ul>
+<li><a href="#%E7%BB%A7%E6%89%BFthread%E7%B1%BB%E9%87%8D%E5%86%99run%E6%96%B9%E6%B3%95">继承Thread类，重写run方法</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0runnable%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%86%99run%E6%96%B9%E6%B3%95">实现Runnable接口，重写run方法</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0callable%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%86%99call%E6%96%B9%E6%B3%95%E9%80%9A%E8%BF%87futuretask%E5%8C%85%E8%A3%85%E5%99%A8%E6%9D%A5%E5%88%9B%E5%BB%BAthread%E7%BA%BF%E7%A8%8B">实现Callable接口，重写call方法，通过FutureTask包装器来创建Thread线程</a>
+<ul>
+<li><a href="#runnable%E5%92%8Ccallable%E7%9A%84%E5%8C%BA%E5%88%AB">Runnable和Callable的区别：</a></li>
+<li><a href="#future%E6%8E%A5%E5%8F%A3">Future接口</a></li>
+<li><a href="#futuretask%E7%B1%BB">FutureTask类</a></li>
+<li><a href="#callable%E4%B8%A4%E7%A7%8D%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F">Callable两种执行方式</a>
+<ul>
+<li><a href="#%E5%80%9F%E5%8A%A9futuretask%E6%89%A7%E8%A1%8C">借助FutureTask执行</a></li>
+<li><a href="#%E5%80%9F%E5%8A%A9%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E8%BF%90%E8%A1%8C">借助线程池来运行</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0threadpoolexecuter">线程池ThreadPoolExecuter</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://EastBeforeDawn.github.io/post/jvmPart1/">
+              <h3 class="post-title">
+                JVM上篇
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

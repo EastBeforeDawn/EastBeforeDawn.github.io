@@ -1,0 +1,1424 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MYSQL进阶 | 东方未明</title>
+<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1591891137605">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://EastBeforeDawn.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="MYSQL进阶 | 东方未明 - Atom Feed" href="https://EastBeforeDawn.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="MYSQL安装
+
+略
+
+配置文件问题
+MySQL查看当前使用哪个路径下配置文件my.cnf的方法
+查看mysql默认读取my.cnf的目录
+
+mysql --help|grep 'my.cnf' 或 mysqld --verbose --h..." />
+    <meta name="keywords" content="Mysql" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://EastBeforeDawn.github.io">
+  <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1591891137605" alt="">
+  </a>
+  <h1 class="site-title">
+    东方未明
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              MYSQL进阶
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-06-11
+              </span>
+              <span>
+                49 min read
+              </span>
+              
+                <a href="https://EastBeforeDawn.github.io/tag/YtwtV8IaI/" class="post-tag">
+                  # Mysql
+                </a>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://wx1.sinaimg.cn/large/93db2409ly1fqmnd0365wj21hc0u0alq.jpg" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="mysql安装">MYSQL安装</h2>
+<ul>
+<li>略</li>
+</ul>
+<h3 id="配置文件问题">配置文件问题</h3>
+<h4 id="mysql查看当前使用哪个路径下配置文件mycnf的方法">MySQL查看当前使用哪个路径下配置文件my.cnf的方法</h4>
+<h5 id="查看mysql默认读取mycnf的目录">查看mysql默认读取my.cnf的目录</h5>
+<ul>
+<li>mysql --help|grep 'my.cnf' 或 mysqld --verbose --help |grep -A 1 'Default options'</li>
+</ul>
+<blockquote>
+<p>/etc/my.cnf, /etc/mysql/my.cnf, /usr/local/etc/my.cnf, ~/.my.cnf 这些就是MySQL默认会搜寻my.cnf的目录，顺序排前的优先。</p>
+</blockquote>
+<h5 id="查看是否使用了指定目录的mycnf文件">查看是否使用了指定目录的my.cnf文件</h5>
+<ul>
+<li>ps -ef|grep mysql|grep 'my.cnf'</li>
+</ul>
+<blockquote>
+<p>在启动MySQL后，可以通过查看MySQL的进程，看看是否有设置使用指定目录的my.cnf文件，如果有则表示MySQL启动时是加载了这个配置文件。如果命令没有输出，那么表示没有设置使用指定目录的my.cnf</p>
+</blockquote>
+<h5 id="启动时没有使用配置文件">启动时没有使用配置文件</h5>
+<blockquote>
+<p>从5.7.18开始不在二进制包中提供my-default.cnf文件。在5.7.18版本中，使用tar.gz安装时，也就是压缩包解压出来安装这种，已经不再需要my.cnf文件也能正常运行，此时为默认配置。<br>
+如果没有设置使用指定目录my.cnf文件及默认读取目录没有my.cnf文件，表示MySQL启动时并没有加载配置文件，而是使用默认配置。需要修改配置，可以在MySQL默认读取的目录中，创建一个my.cnf文件（例如：/etc/my.cnf），把需要修改的配置内容写入，重启MySQL后即可生效。</p>
+</blockquote>
+<h3 id="字符集问题">字符集问题</h3>
+<blockquote>
+<p>5.7.30安装完毕之后无由于字符集的原因无法插入中文，在配置文件中【mysqld】下面添加 character-set-server=utf8并重启MYSQL可以解决，已经创建的表需要修改库和表的字符集</p>
+</blockquote>
+<ul>
+<li><code>show variables like 'character%'</code> 查询字符集</li>
+<li><code>alter database 库名 character set 'utf8'</code> 更改库的字符集</li>
+<li><code>alter table 表名 convert to character set 'utf-8'</code>  改表的字符集</li>
+</ul>
+<h2 id="mysql权限管理">MYSQL权限管理</h2>
+<h3 id="用户管理">用户管理</h3>
+<blockquote>
+<p>在 mysql库user表中为维护用户数据</p>
+</blockquote>
+<h4 id="查看用户">查看用户</h4>
+<ul>
+<li><code>select * from mysql.user</code></li>
+</ul>
+<h5 id="字段解释">字段解释</h5>
+<ul>
+<li>host 连接类型 一共有5种格式
+<ul>
+<li>% 表示可以通过所有方式链接</li>
+<li>IP地址 指定的地址才可以连接</li>
+<li>机器名 指定的机器才可以连接</li>
+<li>localhost 本地连接</li>
+<li>::1 ipv6</li>
+</ul>
+</li>
+<li>user 用户名
+<ul>
+<li>一个用户可以通过多种方式连接，每个链接的权限不同</li>
+</ul>
+</li>
+<li>authentication_string
+<ul>
+<li>密码，使用MYSQLSHA1算法，不可逆</li>
+</ul>
+</li>
+<li>***_priv
+<ul>
+<li>各种权限</li>
+</ul>
+</li>
+</ul>
+<h4 id="创建用户">创建用户</h4>
+<ul>
+<li><code>create user 用户名 identified by '密码'</code></li>
+</ul>
+<h4 id="修改密码">修改密码</h4>
+<h5 id="修改当前用户密码">修改当前用户密码</h5>
+<ul>
+<li><code>set password = password('密码')</code></li>
+</ul>
+<h5 id="修改其他用户密码">修改其他用户密码</h5>
+<ul>
+<li><code>update mysql.user set password = password('密码') where user = '用户名'</code></li>
+</ul>
+<h4 id="修改用户名">修改用户名</h4>
+<ul>
+<li><code>update mysql.user set e user = '用户名' where user = '用户名'</code></li>
+</ul>
+<h4 id="删除用户名">删除用户名</h4>
+<ul>
+<li><code>drop user 用户名</code></li>
+</ul>
+<p><strong><code>操作USER表的数据 在flush privileges之后才会生效</code></strong></p>
+<h3 id="权限管理">权限管理</h3>
+<h4 id="授予权限">授予权限</h4>
+<ul>
+<li><code>grant 权限1,权限2... on 库名.表名 to 用户名@用户访问方式 【 identified by ’密码‘】</code></li>
+<li>*可以代替所有库和所有表，%可以代替所有权限
+<ul>
+<li>grant select on mydb.mytb to lisi@localhost    给lisi本地用户赋予读权限</li>
+<li>grant select on 星号.星号to zhangsan@% identified by '123456';   给zhangsan用户赋予读权限，如果不存在则创建lisi</li>
+</ul>
+</li>
+</ul>
+<h4 id="查看权限">查看权限</h4>
+<h5 id="查看当前用户">查看当前用户</h5>
+<ul>
+<li>show grants</li>
+</ul>
+<h5 id="查看其他用户">查看其他用户</h5>
+<ul>
+<li>select * from mysql.user where user =</li>
+</ul>
+<h5 id="查看某个表">查看某个表</h5>
+<ul>
+<li>select * from tables_priv;</li>
+</ul>
+<h3 id="查询所有用户正在干什么">查询所有用户正在干什么</h3>
+<ul>
+<li>SHOW PROCESSLIST</li>
+<li>kill [id] //杀掉这个用户</li>
+</ul>
+<h2 id="mysql-sql_mode模式说明及设置">MYSQL sql_mode模式说明及设置</h2>
+<h3 id="mysql的sql_mode合理设置">MySQL的sql_mode合理设置</h3>
+<blockquote>
+<p>sql_mode是个很容易被忽视的变量,默认值是空值,在这种设置下是可以允许一些非法操作的,比如允许一些非法数据的插入。在生产环境必须将这个值设置为严格模式,所以开发、测试环境的数据库也必须要设置,这样在开发测试阶段就可以发现问题.</p>
+</blockquote>
+<blockquote>
+<p>如果设置的是宽松模式，那么我们在插入数据的时候，即便是给了一个错误的数据，也可能会被接受，并且不报错，例如：我在创建一个表时，该表中有一个字段为name，给name设置的字段类型时char(10)，如果我在插入数据的时候，其中name这个字段对应的有一条数据的长度超过了10，例如'1234567890abc'，超过了设定的字段长度10，那么不会报错，并且取前十个字符存上，也就是说你这个数据被存为了'1234567890',而'abc'就没有了，但是我们知道，我们给的这条数据是错误的，因为超过了字段长度，但是并没有报错，并且mysql自行处理并接受了，这就是宽松模式的效果，其实在开发、测试、生产等环境中，我们应该采用的是严格模式，出现这种错误，应该报错才对，所以MySQL5.7版本就将sql_mode默认值改为了严格模式，并且我们即便是用的MySQL5.6，也应该自行将其改为严格模式，而你记着，MySQL等等的这些数据库，都是想把关于数据的所有操作都自己包揽下来，包括数据的校验，其实好多时候，我们应该在自己开发的项目程序级别将这些校验给做了，虽然写项目的时候麻烦了一些步骤，但是这样做之后，我们在进行数据库迁移或者在项目的迁移时，就会方便很多，这个看你们自行来衡量。mysql除了数据校验之外，你慢慢的学习过程中会发现，它能够做的事情还有很多很多，将你程序中做的好多事情都包揽了。</p>
+</blockquote>
+<h3 id="sql-model-常用来解决下面几类问题">sql model 常用来解决下面几类问题</h3>
+<ol>
+<li>通过设置sql mode, 可以完成不同严格程度的数据校验，有效地保障数据准备性。</li>
+<li>通过设置sql model 为宽松模式，来保证大多数sql符合标准的sql语法，这样应用在不同数据库之间进行迁移时，则不需要对业务sql 进行较大的修改。</li>
+<li>在不同数据库之间进行数据迁移之前，通过设置SQL Mode 可以使MySQL 上的数据更方便地迁移到目标数据库中。</li>
+</ol>
+<h3 id="sql_mode常用值">sql_mode常用值</h3>
+<h4 id="only_full_group_by">ONLY_FULL_GROUP_BY:</h4>
+<ul>
+<li>对于GROUP BY聚合操作,如果在SELECT中的列,没有在GROUP BY中出现,那么这个SQL是不合法的,因为列不在GROUP BY从句中</li>
+</ul>
+<h4 id="no_auto_value_on_zero">NO_AUTO_VALUE_ON_ZERO:</h4>
+<ul>
+<li>该值影响自增长列的插入。默认设置下,插入0或NULL代表生成下一个自增长值。如果用户 希望插入的值为0,而该列又是自增长的,那么这个选项就有用了。</li>
+</ul>
+<h4 id="strict_trans_tables">STRICT_TRANS_TABLES:</h4>
+<ul>
+<li>在该模式下,如果一个值不能插入到一个事务表中,则中断当前的操作,对非事务表不做限制</li>
+</ul>
+<h4 id="no_zero_in_date">NO_ZERO_IN_DATE:</h4>
+<ul>
+<li>在严格模式下,不允许日期和月份为零</li>
+</ul>
+<h4 id="no_zero_date">NO_ZERO_DATE:</h4>
+<ul>
+<li>设置该值,mysql数据库不允许插入零日期,插入零日期会抛出错误而不是警告。</li>
+</ul>
+<h4 id="error_for_division_by_zero">ERROR_FOR_DIVISION_BY_ZERO:</h4>
+<ul>
+<li>在INSERT或UPDATE过程中,如果数据被零除,则产生错误而非警告。如 果未给出该模式,那么数据被零除时MySQL返回NULL</li>
+</ul>
+<h4 id="no_auto_create_user">NO_AUTO_CREATE_USER:</h4>
+<ul>
+<li>禁止GRANT创建密码为空的用户</li>
+</ul>
+<h4 id="no_engine_substitution">NO_ENGINE_SUBSTITUTION:</h4>
+<ul>
+<li>如果需要的存储引擎被禁用或未编译,那么抛出错误。不设置此值时,用默认的存储引擎替代,并抛出一个异常</li>
+</ul>
+<h4 id="pipes_as_concat">PIPES_AS_CONCAT:</h4>
+<ul>
+<li>将&quot;||&quot;视为字符串的连接操作符而非或运算符,这和Oracle数据库是一样的,也和字符串的拼接函数Concat相类似</li>
+</ul>
+<h4 id="ansi_quotes">ANSI_QUOTES:</h4>
+<ul>
+<li>启用ANSI_QUOTES后,不能用双引号来引用字符串,因为它被解释为识别符</li>
+</ul>
+<h4 id="oracle">ORACLE</h4>
+<ul>
+<li>ORACLE的sql_mode设置等同:PIPES_AS_CONCAT, ANSI_QUOTES, IGNORE_SPACE, NO_KEY_OPTIONS, NO_TABLE_OPTIONS, NO_FIELD_OPTIONS, NO_AUTO_CREATE_USER.</li>
+<li>如果使用mysql,为了继续保留大家使用oracle的习惯,可以对mysql的sql_mode设置如下: 在my.cnf添加如下配置</li>
+</ul>
+<pre><code>[mysqld]  
+sql_mode='ONLY_FULL_GROUP_BY,NO_AUTO_VALUE_ON_ZERO,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE, ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,PIPES_AS_CONCAT,ANSI_QUOTES'
+</code></pre>
+<h3 id="版本区别">版本区别</h3>
+<p>MySQL5.6和MySQL5.7默认的sql_mode模式参数是不一样的,5.6的mode是NO_ENGINE_SUBSTITUTION，其实表示的是一个空值，相当于没有什么模式设置，可以理解为宽松模式。5.7的mode是STRICT_TRANS_TABLES，也就是严格模式。</p>
+<h3 id="严格模式存在的问题">严格模式存在的问题：</h3>
+<p>若设置模式中包含了NO_ZERO_DATE，那么MySQL数据库不允许插入零日期，插入零日期会抛出错误而不是警告。例如表中含字段TIMESTAMP列（如果未声明为NULL或显示DEFAULT子句）将自动分配DEFAULT '0000-00-00 00:00:00'（零时间戳），也或者是本测试的表day列默认允许插入零日期 '0000-00-00' COMMENT '日期'；这些显然是不满足sql_mode中的NO_ZERO_DATE而报错。</p>
+<h3 id="如何修改">如何修改</h3>
+<ul>
+<li>方式一
+<ul>
+<li>先执行select @@sql_mode,复制查询出来的值并将其中的NO_ZERO_IN_DATE,NO_ZERO_DATE删除，然后执行set sql_mode = '修改后的值'或者set session sql_mode='修改后的值';，例如：set session sql_mode='STRICT_TRANS_TABLES';改为严格模式</li>
+<li>此方法只在当前会话中生效，关闭当前会话就不生效了。</li>
+</ul>
+</li>
+<li>方式二
+<ul>
+<li>先执行select @@global.sql_mode,复制查询出来的值并将其中的NO_ZERO_IN_DATE,NO_ZERO_DATE删除，然后执行set global sql_mode = '修改后的值'。</li>
+<li>此方法在当前服务中生效，重新MySQL服务后失效</li>
+</ul>
+</li>
+<li>方式三
+<ul>
+<li>在mysql的安装目录下，或my.cnf文件(windows系统是my.ini文件)，添加如下,然后重启mysql。</li>
+</ul>
+</li>
+</ul>
+<pre><code>[mysqld]
+sql_mode=ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER
+</code></pre>
+<h2 id="mysql逻辑架构">MYSQL逻辑架构</h2>
+<p><img src="https://EastBeforeDawn.github.io/post-images/1591888055036.png" alt="" loading="lazy"><br>
+<img src="https://EastBeforeDawn.github.io/post-images/1591888060387.jpeg" alt="" loading="lazy"></p>
+<h3 id="总体概论">总体概论</h3>
+<h4 id="连接层">连接层</h4>
+<blockquote>
+<p>最上层是一些客户端和连接服务，包括本地sock通信和大多数基于客户端/服务端工具实现的类似于tcp/ip的通信。主要完成一些类似于连接处理、授权认证、及相关的安全方案。在该层上引出了线程池的概念，为通过认证安全接入的客户端提供线程。同样在该层上可以实现基于SSl的安全链接。服务器也会为安全接入的每个客户端验证它所具有的的操作权限。</p>
+</blockquote>
+<h5 id="connectors是不同语言中与sql的交互">Connectors：是不同语言中与SQL的交互</h5>
+<h5 id="management-serveices-utilities-系统管理和控制工具">Management Serveices &amp;Utilities ：系统管理和控制工具</h5>
+<h4 id="服务层">服务层</h4>
+<blockquote>
+<p>第二层架构主要大多数的核心服务功能，如SQL接口，并完成缓存的查询，SQL的分析及优化及部分内置函数的执行。所有跨存储引擎的功能也在这层实现，如过程、函数等。在该层，服务器会解析查询并创建相应的内部解析树，并对其完成相应的优化，如确定查询表的顺序，是否利用索引等，最后生成相应的执行操作，如select语句，服务器还会查询内部的缓存。如果缓存空间足够大这样在解决大量读操作的环境中能够良好的提升系统的性能。</p>
+</blockquote>
+<h5 id="connection-pool-连接池管理缓冲用户连接线程处理等需要缓存的需求">Connection Pool: 连接池管理缓冲用户连接，线程处理等需要缓存的需求。</h5>
+<ul>
+<li>负责监听对 MySQL Server 的各种请求，接收连接请求，转发所有连接请求到线程管理模块。每一个连接上 MySQL Server 的客户端请求都会被分配（或创建）一个连接线程为其单独服务。而连接线程的主要工作就是负责 MySQL Server 与客户端的通信，</li>
+<li>接受客户端的命令请求，传递 Server 端的结果信息等。线程管理模块则负责管理维护这些连接线程。包括线程的创建，线程的 cache 等</li>
+</ul>
+<h5 id="sql-interface-sql接口">SQL Interface: SQL接口</h5>
+<ul>
+<li>接受用户的SQL命令，并且返回用户需要查询的结果。比如select from就是调用SQL Interface</li>
+</ul>
+<h5 id="parser-解析器">Parser: 解析器</h5>
+<ul>
+<li>SQL命令传递到解析器的时候会被解析器验证和解析。解析器是由Lex和YACC实现的，是一个很长的脚本。在 MySQL中我们习惯将所有 Client 端发送给 Server 端的命令都称为 query ，在 MySQL Server 里面，连接线程接收到客户端的一个 Query 后，会直接将该 query 传递给专门负责将各种 Query 进行分类然后转发给各个对应的处理模块。主要功能：
+<ul>
+<li>将SQL语句进行语义和语法的分析，分解成数据结构，然后按照不同的操作类型进行分类，然后做出针对性的转发到后续步骤，以后SQL语句的传递和处理就是基于这个结构的。</li>
+<li>如果在分解构成中遇到错误，那么就说明这个sql语句是不合理的</li>
+</ul>
+</li>
+</ul>
+<h5 id="optimizer-查询优化器">Optimizer: 查询优化器。</h5>
+<ul>
+<li>SQL语句在查询之前会使用查询优化器对查询进行优化。就是优化客户端请求的 query（sql语句） ，根据客户端请求的 query 语句，和数据库中的一些统计信息，在一系列算法的基础上进行分析，得出一个最优的策略，告诉后面的程序如何取得这个 query 语句的结果</li>
+</ul>
+<h5 id="cache和buffer-查询缓存">Cache和Buffer： 查询缓存。</h5>
+<ul>
+<li>他的主要功能是将客户端提交 给MySQL 的 Select 类 query 请求的返回结果集 cache 到内存中，与该 query 的一个 hash 值 做一个对应。该 Query 所取数据的基表发生任何数据的变化之后， MySQL 会自动使该 query 的Cache 失效。在读写比例非常高的应用系统中， Query Cache 对性能的提高是非常显著的。当然它对内存的消耗也是非常大的。</li>
+<li>如果查询缓存有命中的查询结果，查询语句就可以直接去查询缓存中取数据。这个缓存机制是由一系列小缓存组成的。比如表缓存，记录缓存，key缓存，权限缓存等</li>
+</ul>
+<h4 id="引擎层存储引擎层">引擎层存储引擎层</h4>
+<blockquote>
+<p>存储引擎真正的负责了MySQL中数据的存储和读取，服务器通过api与存储引擎进行通信。不同的存储引擎具有的功能不同，这样我们可以根据自己的实际需求进行选取，后面介绍MyISAM和InnoDB<br>
+存储引擎接口存储引擎接口模块可以说是 MySQL 数据库中最有特色的一点了。目前各种数据库产品中，基本上只有 MySQL 可以实现其底层数据存储引擎的插件式管理。这个模块实际上只是 一个抽象类，但正是因为它成功地将各种数据处理高度抽象化，才成就了今天 MySQL 可插拔存储引擎的特色。</p>
+</blockquote>
+<ul>
+<li><code>注意：存储引擎是基于表的，而不是数据库。</code></li>
+</ul>
+<h4 id="数据存储层">数据存储层</h4>
+<blockquote>
+<p>只要将数据存储在运行与裸设备的文件系统上，并完成与存储引擎的交互。</p>
+</blockquote>
+<h3 id="查询sql执行周期">查询SQL执行周期</h3>
+<h4 id="show-profile">show profile</h4>
+<blockquote>
+<p>show profile能够查出最近15条SQL语句的运行状态包含运行过程中执行了哪些操作，各占用了多长时间，以便开发者的分析。</p>
+</blockquote>
+<h4 id="查看是否开启profile默认为关闭">查看是否开启profile,默认为关闭</h4>
+<ul>
+<li><code>show variables like 'profiling';</code></li>
+</ul>
+<h4 id="开启profile">开启profile</h4>
+<ul>
+<li><code>set profiling = 1;</code></li>
+</ul>
+<h4 id="具体使用">具体使用</h4>
+<ul>
+<li>先使用show profiles 查询最近使用的SQL语句</li>
+<li>再使用show profile [cpu,block,io] for query 编号 查询SQL执行周期 (show profile默认查询最后一次执行的SQL)</li>
+</ul>
+<pre><code class="language-tex">mysql&gt; show profiles;
++----------+------------+----------------------------------+
+| Query_ID | Duration   | Query                            |
++----------+------------+----------------------------------+
+|        1 | 0.00020600 | select * from clazz              |
+|        2 | 0.00006400 | show profile for queru 1         |
+|        3 | 0.00021500 | select * from clazz              |
+|        4 | 0.00028800 | select * from clazz where id = 1 |
+|        5 | 0.00024300 | select * from clazz where id = 1 |
++----------+------------+----------------------------------+
+mysql&gt; show profile for query 5;
++----------------------+----------+
+| Status               | Duration |
++----------------------+----------+
+| starting             | 0.000065 |
+| checking permissions | 0.000007 |
+| Opening tables       | 0.000015 |
+| init                 | 0.000022 |
+| System lock          | 0.000008 |
+| optimizing           | 0.000010 |
+| statistics           | 0.000041 |
+| preparing            | 0.000009 |
+| executing            | 0.000003 |
+| Sending data         | 0.000011 |
+| end                  | 0.000003 |
+| query end            | 0.000012 |
+| closing tables       | 0.000006 |
+| freeing items        | 0.000018 |
+| cleaning up          | 0.000013 |
++----------------------+----------+
+</code></pre>
+<h3 id="sql执行顺序">SQL执行顺序</h3>
+<ol>
+<li>from</li>
+<li>on</li>
+<li>join</li>
+<li>where</li>
+<li>group by</li>
+<li>having</li>
+<li>select</li>
+<li>distinct</li>
+<li>order by</li>
+<li>limit</li>
+</ol>
+<h3 id="存储引擎">存储引擎</h3>
+<h4 id="查询mysql支持的引擎">查询MYSQL支持的引擎</h4>
+<ul>
+<li><code>show engines</code>;</li>
+</ul>
+<pre><code class="language-tex">mysql&gt; show engines;
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| Engine             | Support | Comment                                                        | Transactions | XA   | Savepoints |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+| InnoDB             | DEFAULT | Supports transactions, row-level locking, and foreign keys     | YES          | YES  | YES        |
+| MRG_MYISAM         | YES     | Collection of identical MyISAM tables                          | NO           | NO   | NO         |
+| MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables      | NO           | NO   | NO         |
+| BLACKHOLE          | YES     | /dev/null storage engine (anything you write to it disappears) | NO           | NO   | NO         |
+| MyISAM             | YES     | MyISAM storage engine                                          | NO           | NO   | NO         |
+| CSV                | YES     | CSV storage engine                                             | NO           | NO   | NO         |
+| ARCHIVE            | YES     | Archive storage engine                                         | NO           | NO   | NO         |
+| PERFORMANCE_SCHEMA | YES     | Performance Schema                                             | NO           | NO   | NO         |
+| FEDERATED          | NO      | Federated MySQL storage engine                                 | NULL         | NULL | NULL       |
++--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
+</code></pre>
+<h4 id="mysql引擎介绍">MYSQL引擎介绍</h4>
+<h5 id="innodb">InnoDB</h5>
+<ul>
+<li>
+<p>InnoDB是MySQL默认的事务型引擎，也是最重要、最广泛的存储引擎。它的设计是用来处理大量短期事务，短期事务大部分是正常提交的，很少回滚。InnoDB的性能和自动崩溃恢复特性，使得它在非事务型存储的需求中，也很流行。除了非常特别的原因需要使用其他引擎，InnoDB也是非常好值得花时间研究的对象。</p>
+</li>
+<li>
+<p>InnoDB的数据存储在表空间中，表空间是由InnoDB管理的黑盒文件系统，由一系列系统文件组成。InnoDB可以将每个表的数据和索引存放在单独的文件中。InnoDB也可以使用裸设备作为表空间存储介质。</p>
+</li>
+<li>
+<p>InnoDB通过间隙锁（next-key locking）防止幻读的出现。InnoDB是基于聚簇索引建立，与其他存储引擎有很大的区别，聚簇索引对主键查询有很高的性能，不过它的二级索引（secondary index，非主键索引）必须包含主键列。所以如果主键列很大的话，索引会很大。</p>
+</li>
+</ul>
+<h5 id="myisam">MyISAM</h5>
+<ul>
+<li>
+<p>在5.1之前，MyISAM是默认的引擎，MyISAM有大量的特心态，包括全文索引、压缩、空间函数。但是MyISAM不支持事务和行级锁，而且在崩溃后无法安全恢复。即使后续版本中MyISAM支持了事务，但是很多人的概念中依然是不支持事务的引擎。</p>
+</li>
+<li>
+<p>MyISAM并不是无所事处。对于一些只读数据，或者表空间较小，可以忍受恢复操作，可以使用MyISAM。MyISAM会将表存储在两个文件中：数据文件、索引文件。分别是.MYD、.MYI扩展名。MyISAM表可以包含动态或者静态行。MySQL会根据表定义选择那种行格式。MyISAM表的行记录数，取决于磁盘空间和操作系统中的单个文件最大尺寸。</p>
+</li>
+<li>
+<p>在MySQL中，默认配置只能存储256TB的数据。因为指向数据记录的指针长度是6字节。需要修改可以修改表的MAX_ROWS和AVG_ROW_LENGTH选项。两个相乘是最大的大小。会导致重建索引。</p>
+</li>
+<li>
+<p>MyISAM是对整个表加锁，而不是行锁，读取的时候对表加共享锁，写入的时候加排他锁。但是在表有读取查询的同时，也可以往表内写入记录。</p>
+</li>
+<li>
+<p>对于MyISAM，即使是Blob，Text等等长字段，也可以基于前500字符创建索引，MyISAM支持全文索引，这是一个基于分词创建的索引，也可以支持复杂的查询。</p>
+</li>
+<li>
+<p>MyISAM可以选择延迟更新索引键，在创建表的时候指定delay_key_write选项，在每次修改执行完成时，不会立刻将修改的索引数据写入磁盘，而是写到缓存区，只有在清理缓存区或者关闭表的时候才会将索引写入磁盘。这可以极大的提升写入性能，但是在主机崩溃时会造成索引损坏，需要执行修复操作。</p>
+</li>
+<li>
+<p>MyISAM另一个特性是支持压缩表。如果数据在写入后不会修改，那么这个表适合MyISAM压缩表。可以使用myisampack对MyISAM表进行打包，压缩表是不可以修改数据的。压缩表可以极大的减少磁盘占用，因此可以减少磁盘IO，提升性能，压缩表也支持索引，但是索引也是只读的。</p>
+</li>
+<li>
+<p>整体来说MyISAM并没有那么不堪，但是由于没有行锁机制，所以在海量写入的时候，会导致所有查询处于Locked状态。</p>
+</li>
+</ul>
+<h5 id="archive">Archive</h5>
+<ul>
+<li>
+<p>Archive引擎支持是Insert，Select操作，现在支持索引，Archive引擎会缓存所有的写，并利用zlib对写入行进行压缩，所以比MyISAM表的磁盘IO更少。但是在每次Select查询都需要执行全表扫描。所以在Archive适合日志和数据采集应用。这类应用在分析时往往需要全表扫描忙活着更快的Insert操作场景中也可以使用。</p>
+</li>
+<li>
+<p>Archive引擎支持行级锁和专用的缓存区，所以可以实现高并发写入，在查询开始到返回表存在的所有行数之前，Archive会阻止其他Select执行，用来实现一致性读。另外也实现了批量写入结束前批量写入数据对读操作不可见，这种机制模仿了事务和MVCC的特性，但是Archive不是一个事务型引擎，而是针对高写入压缩做了优化的简单引擎。</p>
+</li>
+</ul>
+<h5 id="blackhole">Blackhole</h5>
+<ul>
+<li>Blackhole没有实现任何存储机制，它会舍弃所有写入数据，不做任何保存，但是服务器会记录Blackhole表的日志，用于复制数据到备库，或者只是简单的记录到日志，这种特殊的存储引擎可以在一些特俗的复制架构和日志审核时发挥作用。但是不推荐。</li>
+</ul>
+<h5 id="csv">CSV</h5>
+<ul>
+<li>CSV引擎可以将普通的CSV文件作为MySQL表来处理，但是这种表不支持索引，CSV可以在数据库运行时拷贝或者拷出文件，可以将Excel等电子表格中的数据存储未CSV文件，然后复制到MySQL中，就能在MySQL中打开使用。同样，如果将数据写入到一个CSV引擎表，其他外部程序也可以从表的数据文件中读取CSV的数据。因此CSV可以作为数据交换机制。非常好用。</li>
+</ul>
+<h5 id="federated">Federated</h5>
+<ul>
+<li>Federated引擎是访问其他MySQL服务器的一个代理，它会创建一个到远程MySQL服务器的客户端连接，并将查询传输到远程服务器执行，然后提取或者发送需要的数据。最初设计该存储引擎是为了和企业级数据库如MicrosoftSQLServer和Oracle的类似特性竞争的，可以说更多的是一种市场行为。尽管该引擎看起来提供了一种很好的跨服务器的灵活性，但也经常带来问题，因此默认是禁用的。</li>
+</ul>
+<h5 id="memroy">Memroy</h5>
+<ul>
+<li>如果需要快速地访问数据，并且这些数据不会被修改，重启以后丢失也没有关系，那么使用Memory表（以前也叫做HEAP表）是非常有用的。Memory表至少比MyISAM表要快一个数量级，因为所有的数据都保存在内存中，不需要进行磁盘I/O。Memory表的结构在重启以后还会保留，但数据会丢失。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>MyISAM</th>
+<th>InnoDB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主外键</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>事务</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>行表锁</td>
+<td>表锁，即使操作一条记录会锁住整个表，不适合高并发的操作</td>
+<td>行锁，操作时只锁某一行，不对其他行有影响，适合高并发的操作</td>
+</tr>
+<tr>
+<td>缓存</td>
+<td>只缓存索引，不缓存真实数据</td>
+<td>不仅缓存索引还缓存真实数据，对内存要求较高，并且存储大小对性能有决定性的影响</td>
+</tr>
+<tr>
+<td>表空间</td>
+<td>小</td>
+<td>大</td>
+</tr>
+<tr>
+<td>关注点</td>
+<td>性能</td>
+<td>事务</td>
+</tr>
+</tbody>
+</table>
+<p>了解更多见：<a href="https://juejin.im/post/5c3ef9e051882525dc62de87">MySQL逻辑架构及性能优化原理</a></p>
+<h2 id="mysql索引">MYSQL索引</h2>
+<h3 id="索引介绍">索引介绍</h3>
+<h4 id="什么是索引">什么是索引</h4>
+<ul>
+<li>在MYSQL官方介绍中说，索引（index）是帮助MYSQL高效获取数据的数据结构。所以可以理解为排好序便于快速查找的数据结构。</li>
+<li>在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构以某种方式引用（指向）数据，这样就可以在这些数据结构上实现高级查找算法。这种数据结构，就是索引。</li>
+<li>一般来说索引本身也很大，不可能全部存储在内存中，因此索引往往以索引文件的形式存储的磁盘上。</li>
+</ul>
+<h4 id="索引的优势和劣势">索引的优势和劣势</h4>
+<h5 id="优势">优势</h5>
+<ul>
+<li>类似大学图书馆建书目索引，提高数据检索的效率，降低数据库的IO成本</li>
+<li>通过索引列对数据进行排序，降低数据排序的成本，降低了CPU的消耗</li>
+</ul>
+<h5 id="劣势">劣势</h5>
+<ul>
+<li>虽然索引大大提高了查询速度，同时却会降低更新表的速度，如对表进行INSERT、UPDATE和DELETE。<br>
+因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件每次更新添加了索引列的字段，<br>
+都会调整因为更新所带来的键值变化后的索引信息</li>
+<li>实际上索引也是一张表，该表保存了主键与索引字段，并指向实体表的记录，所以索引列也是要占用空间的</li>
+</ul>
+<h4 id="mysql索引使用的数据结构">MYSQL索引使用的数据结构</h4>
+<h5 id="聚簇索引与非聚簇索引">聚簇索引与非聚簇索引</h5>
+<ul>
+<li>聚簇索引：将数据存储与索引放到了一块，索引结构的叶子节点保存了行数据</li>
+<li>非聚簇索引：将数据与索引分开存储，索引结构的叶子节点指向了数据对应的位置<br>
+<img src="https://EastBeforeDawn.github.io/post-images/1591888086458.jpeg" alt="" loading="lazy"></li>
+</ul>
+<blockquote>
+<p>在innodb中，在聚簇索引之上创建的索引称之为辅助索引，非聚簇索引都是辅助索引，像复合索引、前缀索引、唯一索引。辅助索引叶子节点存储的不再是行的物理位置，而是主键值，辅助索引访问数据总是需要二次查找。<br>
+InnoDB使用的是聚簇索引，将主键组织到一棵B+树中，而行数据就储存在叶子节点上，若使用&quot;where id = 14&quot;这样的条件查找主键，则按照B+树的检索算法即可查找到对应的叶节点，之后获得行数据。<br>
+若对Name列进行条件搜索，则需要两个步骤：第一步在辅助索引B+树中检索Name，到达其叶子节点获取对应的主键。第二步使用主键在主索引B+树种再执行一次B+树检索操作，最终到达叶子节点即可获取整行数据。（重点在于通过其他键需要建立辅助索引）</p>
+</blockquote>
+<ul>
+<li>
+<p><strong>聚簇索引具有唯一性</strong> 由于聚簇索引是将数据跟索引结构放到一块，因此一个表仅有一个聚簇索引。</p>
+</li>
+<li>
+<p><strong>表中行的物理顺序和索引中行的物理顺序是相同的，在创建任何非聚簇索引之前创建聚簇索引</strong> 这是因为聚簇索引改变了表中行的物理顺序，数据行 按照一定的顺序排列，并且自动维护这个顺序；</p>
+</li>
+<li>
+<p><strong>聚簇索引默认是主键</strong>  如果表中没有定义主键，InnoDB 会选择一个唯一且非空的索引代替。如果没有这样的索引，InnoDB 会隐式定义一个主键（类似oracle中的RowId）来作为聚簇索引。如果已经设置了主键为聚簇索引又希望再单独设置聚簇索引，必须先删除主键，然后添加我们想要的聚簇索引，最后恢复设置主键即可。</p>
+</li>
+<li>
+<p><strong>使用聚簇索引的优势</strong> :每次使用辅助索引检索都要经过两次B+树查找，看上去聚簇索引的效率明显要低于非聚簇索引，这不是多此一举吗？聚簇索引的优势在哪？</p>
+<ul>
+<li>由于行数据和聚簇索引的叶子节点存储在一起，同一页中会有多条行数据，访问同一数据页不同行记录时，已经把页加载到了Buffer中（缓存器），再次访问时，会在内存中完成访问，不必访问磁盘。这样主键和行数据是一起被载入内存的，找到叶子节点就可以立刻将行数据返回了，如果按照主键Id来组织数据，获得数据更快。</li>
+<li><code>辅助索引的叶子节点，存储主键值，而不是数据的存放地址</code>。好处是当行数据放生变化时，索引树的节点也需要分裂变化；或者是我们需要查找的数据，在上一次IO读写的缓存中没有，需要发生一次新的IO操作时，可以避免对辅助索引的维护工作，只需要维护聚簇索引树就好了。另一个好处是，因为辅助索引存放的是主键值，减少了辅助索引占用的存储空间大小。
+<ul>
+<li>注：我们知道一次io读写，可以获取到16K大小的资源，我们称之为读取到的数据区域为Page。而我们的B树，B+树的索引结构，叶子节点上存放好多个关键字（索引值）和对应的数据，都会在一次IO操作中被读取到缓存中，所以在访问同一个页中的不同记录时，会在内存里操作，而不用再次进行IO操作了。除非发生了页的分裂，即要查询的行数据不在上次IO操作的换村里，才会触发新的IO操作。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>聚簇索引需要注意的地方</code></p>
+<ul>
+<li>
+<p>当使用主键为聚簇索引时，主键最好不要使用uuid，因为uuid的值太过离散，不适合排序且可能出线新增加记录的uuid，会插入在索引树中间的位置，导致索引树调整复杂度变大，消耗更多的时间和资源。</p>
+</li>
+<li>
+<p>建议使用int类型的自增，方便排序并且默认会在索引树的末尾增加主键值，对索引树的结构影响最小。而且，主键值占用的存储空间越大，辅助索引中保存的主键值也会跟着变大，占用存储空间，也会影响到IO操作读取到的数据量。</p>
+<ul>
+<li>聚簇索引的数据的物理存放顺序与索引顺序是一致的，即：只要索引是相邻的，那么对应的数据一定也是相邻地存放在磁盘上的。如果主键不是自增id，那么可以想 象，它会干些什么，不断地调整数据的物理地址、分页，当然也有其他一些措施来减少这些操作，但却无法彻底避免。但，如果是自增的，那就简单了，它只需要一 页一页地写，索引结构相对紧凑，磁盘碎片少，效率也高。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="b-tree和btree的选择">B-Tree和B+Tree的选择</h5>
+<ul>
+<li>B-Tree特点
+<ul>
+<li>所有键值分布在整个树中</li>
+<li>任何关键字出现且只出现在一个节点中</li>
+<li>搜索有可能在非叶子节点结束</li>
+<li>在关键字全集内做一次查找，性能逼近二分查找算法<br>
+<img src="https://EastBeforeDawn.github.io/post-images/1591888098099.jpeg" alt="" loading="lazy"></li>
+</ul>
+</li>
+<li>B+Tree特点
+<ul>
+<li>所有关键字存储在叶子节点，非叶子节点不存储真正的data</li>
+<li>为所有叶子节点增加了一个链指针<br>
+<img src="https://EastBeforeDawn.github.io/post-images/1591888107532.jpeg" alt="" loading="lazy"></li>
+</ul>
+</li>
+</ul>
+<h5 id="为什么不用红黑树平衡二叉树">为什么不用红黑树/平衡二叉树</h5>
+<ul>
+<li>红黑树等结构也可以用来实现索引，但是文件系统及数据库系统普遍使用B/B+树结构来实现索引。mysql是基于磁盘的数据库，索引是以索引文件的形式存在于磁盘中的，索引的查找过程就会涉及到磁盘IO消耗，磁盘IO的消耗相比较于内存IO的消耗要高好几个数量级，所以索引的组织结构要设计得在查找关键字时要尽量减少磁盘IO的次数。使用B/B+树，跟磁盘的存储原理有关。</li>
+<li>B-Tree借助计算机磁盘预读的机制，每次新建节点时，直接申请一个页的空间，这样就保证一个节点物理上也存储在一个页里，加之计算机存储分配都是按页对齐的，就实现了一个结点只需一次I/O。<br>
+假设 B-Tree 的高度为 h,B-Tree中一次检索最多需要h-1次I/O（根节点常驻内存），渐进复杂度为O(h)=O(logdN)O(h)=O(logdN)。一般实际应用中，出度d是非常大的数字，通常超过100，因此h非常小（通常不超过3，也即索引的B+树层次一般不超过三层，所以查找效率很高）。<br>
+而红黑树这种结构，h明显要深的多。由于逻辑上很近的节点（父子）物理上可能很远，无法利用局部性，所以红黑树的I/O渐进复杂度也为O(h)，效率明显比B-Tree差很多。</li>
+<li>局部性原理与磁盘预读
+<ul>
+<li>为了提升效率，要尽量减少磁盘IO的次数。实际过程中，磁盘并不是每次严格按需读取，而是每次都会预读。磁盘读取完需要的数据后，会按顺序再多读一部分数据到内存中，这样做的理论依据是计算机科学中注明的局部性原理：<code>当一个数据被用到时，其附近的数据也通常会马上被使用，程序运行期间所需要的数据通常比较集中</code>
+<ul>
+<li>由于磁盘顺序读取的效率很高(不需要寻道时间，只需很少的旋转时间)，因此对于具有局部性的程序来说，预读可以提高I/O效率.预读的长度一般为页(page)的整倍数。</li>
+<li>MySQL(默认使用InnoDB引擎),将记录按照页的方式进行管理,每页大小默认为16K(这个值可以修改)。linux 默认页大小为4K。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="为什么mysql的索引使用b树而不是b树">为什么mysql的索引使用B+树而不是B树</h5>
+<ul>
+<li>B+树更适合外部存储(一般指磁盘存储),由于内节点(非叶子节点)不存储data，所以一个节点可以存储更多的内节点，每个节点能索引的范围更大更精确。也就是说使用B+树单次磁盘IO的信息量相比较B树更大，IO效率更高。</li>
+<li>mysql是关系型数据库，经常会按照区间来访问某个索引列，B+树的叶子节点间按顺序建立了链指针，加强了区间访问性，所以B+树对索引列上的区间范围查询很友好。而B树每个节点的key和data在一起，无法进行区间查找。</li>
+</ul>
+<h4 id="mysql索引分类">MYSQL索引分类</h4>
+<h5 id="单值索引-即一个索引只包含单个列一个表可以有多个单列索引">单值索引 ：即一个索引只包含单个列，一个表可以有多个单列索引</h5>
+<ul>
+<li>创建表时建索引：CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),  PRIMARY KEY(id),  KEY (customer_name));</li>
+<li>单独建单值索引：CREATE  INDEX idx_customer_name ON customer(customer_name);</li>
+<li>删除索引：DROP INDEX idx_customer_name  on customer;</li>
+</ul>
+<h5 id="唯一索引索引列的值必须唯一但允许有空值">唯一索引：索引列的值必须唯一，但允许有空值</h5>
+<ul>
+<li>随表一起建索引：CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),  PRIMARY KEY(id),  KEY (customer_name),  UNIQUE (customer_no));</li>
+<li>单独建唯一索引：CREATE UNIQUE INDEX idx_customer_no ON customer(customer_no);</li>
+<li>删除索引：DROP INDEX idx_customer_no on customer ;</li>
+</ul>
+<h5 id="主键索引设定为主键后数据库会自动建立索引innodb为聚簇索引">主键索引：设定为主键后数据库会自动建立索引，innodb为聚簇索引</h5>
+<ul>
+<li>随表一起建索引：CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),  PRIMARY KEY(id) );   CREATE TABLE customer2 (id INT(10) UNSIGNED   ,customer_no VARCHAR(200),customer_name VARCHAR(200),  PRIMARY KEY(id) );</li>
+<li>单独建主键索引：ALTER TABLE customer  add PRIMARY KEY customer(customer_no);</li>
+<li>删除建主键索引：ALTER TABLE customer  drop PRIMARY KEY ;</li>
+<li>修改建主键索引：必须先删除掉(drop)原索引，再新建(add)索引</li>
+</ul>
+<h5 id="复合索引即一个索引包含多个列">复合索引：即一个索引包含多个列</h5>
+<ul>
+<li>随表一起建索引：CREATE TABLE customer (id INT(10) UNSIGNED  AUTO_INCREMENT ,customer_no VARCHAR(200),customer_name VARCHAR(200),  PRIMARY KEY(id),  KEY (customer_name),  UNIQUE (customer_name),  KEY (customer_no,customer_name));</li>
+<li>单独建索引：CREATE  INDEX idx_no_name ON customer(customer_no,customer_name);</li>
+<li>删除索引：DROP INDEX idx_no_name  on customer ;</li>
+</ul>
+<h5 id="基本语法">基本语法</h5>
+<ul>
+<li>创建： CREATE  [UNIQUE ]  INDEX [indexName] ON table_name(column))</li>
+<li>删除：DROP INDEX [indexName] ON mytable;</li>
+<li>查看：SHOW INDEX FROM table_name\G</li>
+<li>ALTER：有四种方式来添加数据表的索引
+<ul>
+<li>ALTER TABLE tbl_name ADD PRIMARY KEY (column_list): 该语句添加一个主键，这意味着索引值必须是唯一的，且不能为NULL。</li>
+<li>ALTER TABLE tbl_name ADD UNIQUE index_name (column_list): 这条语句创建索引的值必须是唯一的（除了NULL外，NULL可能会出现多次）。</li>
+<li>ALTER TABLE tbl_name ADD INDEX index_name (column_list): 添加普通索引，索引值可出现多次。</li>
+<li>ALTER TABLE tbl_name ADD FULLTEXT index_name (column_list):该语句指定了索引为 FULLTEXT ，用于全文索引。</li>
+</ul>
+</li>
+</ul>
+<h4 id="mysql是否应该建立索引的情况">MYSQL是否应该建立索引的情况</h4>
+<h5 id="需要创建索引">需要创建索引</h5>
+<ul>
+<li>主键自动建立唯一索引</li>
+<li>频繁作为查询条件的字段应该创建索引</li>
+<li>查询中与其它表关联的字段，外键关系建立索引</li>
+<li>单键/组合索引的选择问题， 组合索引性价比更高</li>
+<li>查询中排序的字段，排序字段若通过索引去访问将大大提高排序速度</li>
+<li>查询中统计或者分组字段</li>
+</ul>
+<h5 id="不需要创建索引">不需要创建索引</h5>
+<ul>
+<li>表记录太少</li>
+<li>经常增删改的表或者字段
+<ul>
+<li>索引提高了查询速度，同时却会降低更新表的速度，如对表进行INSERT、UPDATE和DELETE。<br>
+因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件</li>
+</ul>
+</li>
+<li>Where条件里用不到的字段不创建索引</li>
+<li>过滤性不好的不适合建索引
+<ul>
+<li>比如性别字段就不适合做索引</li>
+</ul>
+</li>
+</ul>
+<h2 id="mysql索引与性能分析">MYSQL索引与性能分析</h2>
+<h3 id="explain执行计划">EXPLAIN（执行计划）</h3>
+<blockquote>
+<p>使用EXPLAIN关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是<br>
+如何处理你的SQL语句的。分析你的查询语句或是表结构的性能瓶颈</p>
+</blockquote>
+<h4 id="explain-可以查到">EXPLAIN 可以查到</h4>
+<ul>
+<li>表的读取顺序</li>
+<li>哪些索引可以使用</li>
+<li>数据读取操作的操作类型</li>
+<li><code>哪些索引被实际使用</code></li>
+<li>表之间的引用</li>
+<li><code>每张表有多少行被物理查询</code></li>
+</ul>
+<h4 id="使用-explain-sql">使用 ： EXPLAIN + SQL</h4>
+<pre><code class="language-tex">+----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+</code></pre>
+<h3 id="explain字段解释"><code>EXPLAIN字段解释</code></h3>
+<h4 id="id">id</h4>
+<blockquote>
+<p>select查询的序列号,包含一组数字，表示查询中执行select子句或操作表的顺序</p>
+</blockquote>
+<h5 id="三种情况">三种情况</h5>
+<ul>
+<li>id相同，执行顺序由上至下</li>
+<li>id不同，如果是子查询，id的序号会递增，id值越大优先级越高，越先被执行</li>
+<li>id相同不同，同时存在。id如果相同，可以认为是一组，从上往下顺序执行；在所有组中，id值越大，优先级越高，越先执行 衍生表 = DERIVED</li>
+</ul>
+<h5 id="关注点">关注点</h5>
+<ul>
+<li>id号每个号码，表示一趟独立的查询。一个sql 的查询趟数越少越好。</li>
+</ul>
+<h4 id="select_type">select_type</h4>
+<blockquote>
+<p>查询的类型，主要是用于区别普通查询、联合查询、子查询等的复杂查询</p>
+</blockquote>
+<h5 id="simple">SIMPLE</h5>
+<ul>
+<li>简单的 select 查询,查询中不包含子查询或者UNION</li>
+</ul>
+<h5 id="primary">PRIMARY</h5>
+<ul>
+<li>查询中若包含任何复杂的子部分，最外层查询则被标记为Primary</li>
+</ul>
+<h5 id="derived">DERIVED</h5>
+<ul>
+<li>在FROM列表中包含的子查询被标记为DERIVED(衍生)，MySQL会递归执行这些子查询, 把结果放在临时表里。</li>
+</ul>
+<h5 id="subquery">SUBQUERY</h5>
+<ul>
+<li>在SELECT或WHERE列表中包含了子查询</li>
+</ul>
+<h5 id="dependent-subquery">DEPENDENT SUBQUERY</h5>
+<ul>
+<li>在SELECT或WHERE列表中包含了子查询,子查询基于外层</li>
+</ul>
+<h5 id="uncacheable-subqurey">UNCACHEABLE SUBQUREY</h5>
+<h5 id="union">UNION</h5>
+<ul>
+<li>若第二个SELECT出现在UNION之后，则被标记为UNION；</li>
+<li>若UNION包含在FROM子句的子查询中,外层SELECT将被标记为：DERIVED</li>
+</ul>
+<h5 id="union-result">UNION RESULT</h5>
+<ul>
+<li>从UNION表获取结果的SELECT</li>
+</ul>
+<h4 id="table">table</h4>
+<blockquote>
+<p>显示这一行的数据是关于哪张表的</p>
+</blockquote>
+<h4 id="partitions">partitions</h4>
+<blockquote>
+<p>代表分区表中的命中情况，非分区表，该项为null</p>
+</blockquote>
+<h4 id="type">type</h4>
+<blockquote>
+<p>type显示的是访问类型，是较为重要的一个指标，结果值由好到坏一般为system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL。一般来说，得保证查询至少达到range级别，最好能达到ref。</p>
+</blockquote>
+<h5 id="system">system</h5>
+<ul>
+<li>表只有一行记录（等于系统表），这是const类型的特列，平时不会出现，这个也可以忽略不计</li>
+</ul>
+<h5 id="const">const</h5>
+<ul>
+<li>表示通过索引一次就找到了,const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快<br>
+如将主键置于where列表中，MySQL就能将该查询转换为一个常量</li>
+</ul>
+<h5 id="eq_ref">eq_ref</h5>
+<ul>
+<li>唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描</li>
+</ul>
+<h5 id="ref">ref</h5>
+<ul>
+<li>非唯一性索引扫描，返回匹配某个单独值的所有行.本质上也是一种索引访问，它返回所有匹配某个单独值的行，然而，它可能会找到多个符合条件的行，所以他应该属于查找和扫描的混合体</li>
+</ul>
+<h5 id="range"><code>range</code></h5>
+<ul>
+<li>只检索给定范围的行,使用一个索引来选择行。key 列显示使用了哪个索引一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询，这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束语另一点，不用扫描全部索引。</li>
+</ul>
+<h5 id="index"><code>index</code></h5>
+<ul>
+<li>Full index scan ，index与all的区别是index只遍历索引树。出现index是sql使用了索引但是没用通过索引进行过滤，一般是使用了覆盖索引或者是利用索引进行了排序分组</li>
+</ul>
+<h5 id="all最为致命的类型"><em><code>all</code></em>(最为致命的类型)</h5>
+<ul>
+<li>Full Table Scan，将遍历全表以找到匹配的行</li>
+</ul>
+<h5 id="index_merge">index_merge</h5>
+<ul>
+<li>在查询过程中需要多个索引组合使用，通常出现在有 or 的关键字的sql中</li>
+</ul>
+<h5 id="ref_or_null">ref_or_null</h5>
+<ul>
+<li>对于某个字段既需要关联条件，也需要null值得情况下。查询优化器会选择用ref_or_null连接查询。</li>
+</ul>
+<h5 id="index_subquery">index_subquery</h5>
+<ul>
+<li>利用索引来关联子查询，不再全表扫描。</li>
+</ul>
+<h5 id="unique_subquery">unique_subquery</h5>
+<ul>
+<li>该联接类型类似于index_subquery。 子查询中的唯一索引</li>
+</ul>
+<h5 id="备注一般来说得保证查询至少达到range级别最好能达到ref">备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</h5>
+<h4 id="possible_keys">possible_keys</h4>
+<blockquote>
+<p>显示可能应用在这张表中的索引，一个或多个。<br>
+查询涉及到的字段上若存在索引，则该索引将被列出，但不一定被查询实际使用</p>
+</blockquote>
+<h4 id="key">key</h4>
+<blockquote>
+<p>实际使用的索引。如果为NULL，则没有使用索引, 查询中若使用了覆盖索引，则该索引和查询的select字段重叠</p>
+</blockquote>
+<h4 id="key_len">key_len</h4>
+<blockquote>
+<p>表示索引中使用的字节数，可通过该列计算查询中使用的索引的长度。 key_len字段能够帮你检查是否充分的利用上了索引<br>
+如何计算长度：EXPLAIN SELECT SQL_NO_CACHE * FROM emp WHERE emp.age=30 AND emp.name LIKE 'ab%';</p>
+</blockquote>
+<ol>
+<li>先看索引上字段的类型+长度比如 int=4 ;  varchar(20) =20 ; char(20) =20</li>
+<li>如果是varchar或者char这种字符串字段，视字符集要乘不同的值，比如utf-8  要乘 3,GBK要乘2</li>
+<li>varchar这种动态字符串要加2个字节</li>
+<li>允许为空的字段要加1个字节<br>
+<img src="./%E4%B8%8B%E8%BD%BD.png" alt="Alt text" loading="lazy"></li>
+</ol>
+<h4 id="ref-2">ref</h4>
+<blockquote>
+<p>显示索引的哪一列被使用了，如果可能的话，是一个常数。哪些列或常量被用于查找索引列上的值</p>
+</blockquote>
+<h4 id="rows">rows</h4>
+<blockquote>
+<p>rows列显示MySQL认为它执行查询时必须检查的行数。(<code>越少越好</code>)</p>
+</blockquote>
+<h4 id="filtered">filtered</h4>
+<blockquote>
+<p>这个字段表示存储引擎返回的数据在server层过滤后，剩下多少满足查询的记录数量的比例，注意是百分比，不是具体记录数</p>
+</blockquote>
+<h4 id="extra">Extra</h4>
+<blockquote>
+<p>包含不适合在其他列中显示但十分重要的额外信息</p>
+</blockquote>
+<h5 id="using-filesort"><code>Using filesort</code></h5>
+<ul>
+<li>说明mysql会对数据使用一个外部的索引排序，而不是按照表内的索引顺序进行读取。<br>
+MySQL中无法利用索引完成的排序操作称为“文件排序”</li>
+</ul>
+<h5 id="using-temporary"><code>Using temporary</code></h5>
+<ul>
+<li>使了用临时表保存中间结果,MySQL在对查询结果排序时使用临时表。常见于排序 order by 和分组查询 group by。</li>
+</ul>
+<h5 id="using-index"><code>USING index</code></h5>
+<ul>
+<li>表示相应的select操作中使用了覆盖索引(Covering Index)，避免访问了表的数据行，效率不错！</li>
+<li>如果同时出现using where，表明索引被用来执行索引键值的查找;</li>
+<li>如果没有同时出现using where，表明索引只是用来读取数据而非利用索引执行查找。</li>
+</ul>
+<h5 id="using-where">Using where</h5>
+<ul>
+<li>表明使用了where过滤</li>
+</ul>
+<h5 id="using-join-buffer">using join buffer</h5>
+<ul>
+<li>使用了连接缓存：</li>
+</ul>
+<h5 id="impossible-where">impossible where</h5>
+<ul>
+<li>SQL错误，where子句的值总是false，不能用来获取任何元组</li>
+</ul>
+<h5 id="select-tables-optimized-away">select tables optimized away</h5>
+<ul>
+<li>在没有GROUPBY子句的情况下，基于索引优化MIN/MAX操作或者，对于MyISAM存储引擎优化COUNT(*)操作，不必等到执行阶段再进行计算，查询执行计划生成的阶段即完成优化。</li>
+</ul>
+<h3 id="查询优化策略"><code>查询优化策略</code></h3>
+<h4 id="单表使用索引及常见索引失效">单表使用索引及常见索引失效</h4>
+<ul>
+<li>全值匹配</li>
+<li><code>最佳左前缀法则</code>
+<ul>
+<li>如果索引了多列，要遵守最左前缀法则。指的是查询从索引的最左前列开始并且不跳过索引中的列。</li>
+</ul>
+</li>
+<li>不在索引列上做任何操作（计算、函数、(自动or手动)类型转换），会导致索引失效而转向全表扫描</li>
+<li>存储引擎不能使用索引中范围条件右边的列</li>
+<li>mysql 在使用不等于(!= 或者&lt;&gt;)的时候无法使用索引会导致全表扫描</li>
+<li>is not null 也无法使用索引,但是is null是可以使用索引的</li>
+<li>like以通配符开头('%abc...')mysql索引失效会变成全表扫描的操作</li>
+<li>字符串不加单引号索引失效</li>
+</ul>
+<h4 id="一般性建议">一般性建议</h4>
+<ul>
+<li>对于单键索引，尽量选择针对当前query过滤性更好的索引</li>
+<li>在选择组合索引的时候，当前Query中过滤性最好的字段在索引字段顺序中，位置越靠前越好。</li>
+<li>在选择组合索引的时候，尽量选择可以能够包含当前query中的where字句中更多字段的索引</li>
+<li>在选择组合索引的时候，如果某个字段可能出现范围查询时，尽量把这个字段放在索引次序的最后面</li>
+<li>书写sql语句时，尽量避免造成索引失效的情况</li>
+</ul>
+<h4 id="关联查询优化">关联查询优化</h4>
+<ul>
+<li>保证被驱动表的join字段已经被索引</li>
+<li>left join 时，选择小表作为驱动表，大表作为被驱动表。</li>
+<li>inner join 时，mysql会自己帮你把小结果集的表选为驱动表。</li>
+<li>子查询尽量不要放在被驱动表，有可能使用不到索引。</li>
+<li>能够直接多表关联的尽量直接关联，不用子查询。</li>
+</ul>
+<h4 id="子查询优化">子查询优化</h4>
+<ul>
+<li>尽量不要使用not in  或者 not exists， 用left outer join  on  xxx is null 替代</li>
+</ul>
+<h4 id="分组查询优化">分组查询优化</h4>
+<ul>
+<li>ORDER BY子句，尽量使用Index方式排序,避免使用FileSort方式排序</li>
+</ul>
+<h5 id="无法避免filesort的情况">无法避免FileSort的情况</h5>
+<ul>
+<li>双路排序</li>
+<li>MySQL 4.1之前是使用双路排序,字面意思就是两次扫描磁盘，最终得到数据，读取行指针和orderby列，对他们进行排序，然后扫描已经排序好的列表，按照列表中的值重新从列表中读取对应的数据输出</li>
+<li>从磁盘取排序字段，在buffer进行排序，再从磁盘取其他字段。</li>
+<li>取一批数据，要对磁盘进行了两次扫描，众所周知，I\O是很耗时的，所以在mysql4.1之后，出现了第二种改进的算法，就是单路排序。</li>
+<li>单路排序
+<ul>
+<li>从磁盘读取查询需要的所有列，按照order by列在buffer对它们进行排序，然后扫描排序后的列表进行输出，它的效率更快一些，避免了第二次读取数据。并且把随机IO变成了顺序IO,但是它会使用更多的空间，<br>
+因为它把每一行都保存在内存中了。</li>
+</ul>
+</li>
+</ul>
+<h5 id="单路排序的问题">单路排序的问题</h5>
+<blockquote>
+<p>由于单路是后出的，总体而言好过双路。但是在sort_buffer中，方法B比方法A要多占用很多空间，因为方法B是把所有字段都取出, 所以有可能取出的数据的总大小超出了sort_buffer的容量，导致每次只能取sort_buffer容量大小的数据，进行排序（创建tmp文件，多路合并），排完再取取sort_buffer容量大小，再排……从而多次I/O。本来想省一次I/O操作，反而导致了大量的I/O操作，反而得不偿失。</p>
+</blockquote>
+<h5 id="单路排序优化策略">单路排序优化策略</h5>
+<ul>
+<li>增大sort_buffer_size参数的设置</li>
+<li>增大max_length_for_sort_data参数的设置</li>
+<li>减少select 后面的查询的字段。</li>
+</ul>
+<h5 id="策略分析">策略分析</h5>
+<ul>
+<li>Order by时select * 是一个大忌只Query需要的字段， 这点非常重要。在这里的影响是</li>
+<li>当Query的字段大小总和小于max_length_for_sort_data 而且排序字段不是 TEXT|BLOB 类型时，会用改进后的算法——单路排序， 否则用老算法——多路排序。</li>
+<li>两种算法的数据都有可能超出sort_buffer的容量，超出之后，会创建tmp文件进行合并排序，导致多次I/O，但是用单路排序算法的风险会更大一些,所以要提高sort_buffer_size。</li>
+<li>尝试提高 sort_buffer_size :不管用哪种算法，提高这个参数都会提高效率，当然，要根据系统的能力去提高，因为这个参数是针对每个进程的  1M-8M之间调整</li>
+<li>尝试提高 max_length_for_sort_data: 提高这个参数， 会增加用改进算法的概率。但是如果设的太高，数据总容量超出sort_buffer_size的概率就增大，明显症状是高的磁盘I/O活动和低的处理器使用率.  (1024-8192之间调整 )</li>
+</ul>
+<h4 id="group-by关键字优化">GROUP BY关键字优化</h4>
+<blockquote>
+<p>group by 使用索引的原则几乎跟order by一致 ，唯一区别是groupby 即使没有过滤条件用到索引，也可以直接使用索引。</p>
+</blockquote>
+<h4 id="最后使用索引的手段覆盖索引">最后使用索引的手段：覆盖索引</h4>
+<blockquote>
+<p>什么是覆盖索引？简单说就是，select 到 from 之间查询的列 &lt;=使用的索引列+主键  explain select * from emp where name like '%abc';   使用覆盖索引后</p>
+</blockquote>
+<h2 id="查询截取分析">查询截取分析</h2>
+<blockquote>
+<p>MySQL的慢查询日志是MySQL提供的一种日志记录，它用来记录在MySQL中响应时间超过阀值的语句，具体指运行时间超过long_query_time值的SQL，则会被记录到慢查询日志中。 具体指运行时间超过long_query_time值的SQL，则会被记录到慢查询日志中。long_query_time的默认值为10，意思是运行10秒以上的语句。 由他来查看哪些SQL超出了我们的最大忍耐时间值，比如一条sql执行超过5秒钟，我们就算慢SQL，希望能收集超过5秒的sql，结合之前explain进行全面分析。</p>
+</blockquote>
+<h3 id="慢查询说明">慢查询说明</h3>
+<blockquote>
+<p>默认情况下，MySQL数据库没有开启慢查询日志，需要我们手动来设置这个参数。当然，如果不是调优需要的话，一般不建议启动该参数，因为开启慢查询日志会或多或少带来一定的性能影响。慢查询日志支持将日志记录写入文件<br>
+那么开启了慢查询日志后，什么样的SQL才会记录到慢查询日志里面呢？这个是由参数long_query_time控制，默认情况下long_query_time的值为10秒，命令：SHOW VARIABLES LIKE 'long_query_time%';可以使用命令修改，也可以在my.cnf参数里面修改。假如运行时间正好等于long_query_time的情况，并不会被记录下来。也就是说，在mysql源码里是判断大于long_query_time，而非大于等于。</p>
+</blockquote>
+<h4 id="查询是否开启以及配置参数">查询是否开启以及配置参数</h4>
+<ul>
+<li>SHOW VARIABLES LIKE '%slow_query_log%';</li>
+<li>SHOW VARIABLES LIKE 'long_query_time%';</li>
+</ul>
+<h4 id="开启以及配置参数">开启以及配置参数</h4>
+<h5 id="命令方式">命令方式</h5>
+<ul>
+<li>set global slow_query_log=1; //开启慢查询日志</li>
+<li>set  long_query_time=1   // 设置慢查询记录时间的阈值</li>
+</ul>
+<h5 id="配置文件方式-mycnf">配置文件方式  my.cnf</h5>
+<pre><code>【mysqld】
+slow_query_log=1
+slow_query_log_file=/var/lib/mysql/atguigu-slow.log
+long_query_time=3
+log_output=FILE
+</code></pre>
+<h3 id="日志分析工具mysqldumpslow">日志分析工具mysqldumpslow</h3>
+<h4 id="查看mysqldumpslow的帮助信息">查看mysqldumpslow的帮助信息</h4>
+<ul>
+<li><code>-a: 不将数字抽象成N，字符串抽象成S</code></li>
+<li><code>-s: 是表示按照何种方式排序</code>
+<ul>
+<li>c: 访问次数</li>
+<li>l: 锁定时间</li>
+<li>r: 返回记录</li>
+<li>t: 查询时间</li>
+<li>al:平均锁定时间</li>
+<li>ar:平均返回记录数</li>
+<li>at:平均查询时间</li>
+</ul>
+</li>
+<li><code>-t:即为返回前面多少条的数据</code></li>
+<li><code>-g:后边搭配一个正则匹配模式，大小写不敏感的</code></li>
+</ul>
+<h4 id="工作常用参考">工作常用参考</h4>
+<ul>
+<li>得到返回记录集最多的10个SQL
+<ul>
+<li>mysqldumpslow -s r -t 10 /var/lib/mysql/atguigu-slow.log</li>
+</ul>
+</li>
+<li>得到访问次数最多的10个SQL
+<ul>
+<li>mysqldumpslow -s c -t 10 /var/lib/mysql/atguigu-slow.log</li>
+</ul>
+</li>
+<li>得到按照时间排序的前10条里面含有左连接的查询语句
+<ul>
+<li>mysqldumpslow -s t -t 10 -g &quot;left join&quot; /var/lib/mysql/atguigu-slow.log</li>
+</ul>
+</li>
+<li>另外建议在使用这些命令时结合 | 和more 使用 ，否则有可能出现爆屏情况
+<ul>
+<li>mysqldumpslow -s r -t 10 /var/lib/mysql/atguigu-slow.log | more</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#mysql%E5%AE%89%E8%A3%85">MYSQL安装</a>
+<ul>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%97%AE%E9%A2%98">配置文件问题</a>
+<ul>
+<li><a href="#mysql%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AA%E8%B7%AF%E5%BE%84%E4%B8%8B%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6mycnf%E7%9A%84%E6%96%B9%E6%B3%95">MySQL查看当前使用哪个路径下配置文件my.cnf的方法</a>
+<ul>
+<li><a href="#%E6%9F%A5%E7%9C%8Bmysql%E9%BB%98%E8%AE%A4%E8%AF%BB%E5%8F%96mycnf%E7%9A%84%E7%9B%AE%E5%BD%95">查看mysql默认读取my.cnf的目录</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E4%BD%BF%E7%94%A8%E4%BA%86%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E7%9A%84mycnf%E6%96%87%E4%BB%B6">查看是否使用了指定目录的my.cnf文件</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8%E6%97%B6%E6%B2%A1%E6%9C%89%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">启动时没有使用配置文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E9%9B%86%E9%97%AE%E9%A2%98">字符集问题</a></li>
+</ul>
+</li>
+<li><a href="#mysql%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86">MYSQL权限管理</a>
+<ul>
+<li><a href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">用户管理</a>
+<ul>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E7%94%A8%E6%88%B7">查看用户</a>
+<ul>
+<li><a href="#%E5%AD%97%E6%AE%B5%E8%A7%A3%E9%87%8A">字段解释</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7">创建用户</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81">修改密码</a>
+<ul>
+<li><a href="#%E4%BF%AE%E6%94%B9%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81">修改当前用户密码</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81">修改其他用户密码</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E5%90%8D">修改用户名</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7%E5%90%8D">删除用户名</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86">权限管理</a>
+<ul>
+<li><a href="#%E6%8E%88%E4%BA%88%E6%9D%83%E9%99%90">授予权限</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E6%9D%83%E9%99%90">查看权限</a>
+<ul>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7">查看当前用户</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7">查看其他用户</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E6%9F%90%E4%B8%AA%E8%A1%A8">查看某个表</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E7%94%A8%E6%88%B7%E6%AD%A3%E5%9C%A8%E5%B9%B2%E4%BB%80%E4%B9%88">查询所有用户正在干什么</a></li>
+</ul>
+</li>
+<li><a href="#mysql-sql_mode%E6%A8%A1%E5%BC%8F%E8%AF%B4%E6%98%8E%E5%8F%8A%E8%AE%BE%E7%BD%AE">MYSQL sql_mode模式说明及设置</a>
+<ul>
+<li><a href="#mysql%E7%9A%84sql_mode%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AE">MySQL的sql_mode合理设置</a></li>
+<li><a href="#sql-model-%E5%B8%B8%E7%94%A8%E6%9D%A5%E8%A7%A3%E5%86%B3%E4%B8%8B%E9%9D%A2%E5%87%A0%E7%B1%BB%E9%97%AE%E9%A2%98">sql model 常用来解决下面几类问题</a></li>
+<li><a href="#sql_mode%E5%B8%B8%E7%94%A8%E5%80%BC">sql_mode常用值</a>
+<ul>
+<li><a href="#only_full_group_by">ONLY_FULL_GROUP_BY:</a></li>
+<li><a href="#no_auto_value_on_zero">NO_AUTO_VALUE_ON_ZERO:</a></li>
+<li><a href="#strict_trans_tables">STRICT_TRANS_TABLES:</a></li>
+<li><a href="#no_zero_in_date">NO_ZERO_IN_DATE:</a></li>
+<li><a href="#no_zero_date">NO_ZERO_DATE:</a></li>
+<li><a href="#error_for_division_by_zero">ERROR_FOR_DIVISION_BY_ZERO:</a></li>
+<li><a href="#no_auto_create_user">NO_AUTO_CREATE_USER:</a></li>
+<li><a href="#no_engine_substitution">NO_ENGINE_SUBSTITUTION:</a></li>
+<li><a href="#pipes_as_concat">PIPES_AS_CONCAT:</a></li>
+<li><a href="#ansi_quotes">ANSI_QUOTES:</a></li>
+<li><a href="#oracle">ORACLE</a></li>
+</ul>
+</li>
+<li><a href="#%E7%89%88%E6%9C%AC%E5%8C%BA%E5%88%AB">版本区别</a></li>
+<li><a href="#%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">严格模式存在的问题：</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9">如何修改</a></li>
+</ul>
+</li>
+<li><a href="#mysql%E9%80%BB%E8%BE%91%E6%9E%B6%E6%9E%84">MYSQL逻辑架构</a>
+<ul>
+<li><a href="#%E6%80%BB%E4%BD%93%E6%A6%82%E8%AE%BA">总体概论</a>
+<ul>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E5%B1%82">连接层</a>
+<ul>
+<li><a href="#connectors%E6%98%AF%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E4%B8%AD%E4%B8%8Esql%E7%9A%84%E4%BA%A4%E4%BA%92">Connectors：是不同语言中与SQL的交互</a></li>
+<li><a href="#management-serveices-utilities-%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%92%8C%E6%8E%A7%E5%88%B6%E5%B7%A5%E5%85%B7">Management Serveices &amp;Utilities ：系统管理和控制工具</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E5%B1%82">服务层</a>
+<ul>
+<li><a href="#connection-pool-%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%AE%A1%E7%90%86%E7%BC%93%E5%86%B2%E7%94%A8%E6%88%B7%E8%BF%9E%E6%8E%A5%E7%BA%BF%E7%A8%8B%E5%A4%84%E7%90%86%E7%AD%89%E9%9C%80%E8%A6%81%E7%BC%93%E5%AD%98%E7%9A%84%E9%9C%80%E6%B1%82">Connection Pool: 连接池管理缓冲用户连接，线程处理等需要缓存的需求。</a></li>
+<li><a href="#sql-interface-sql%E6%8E%A5%E5%8F%A3">SQL Interface: SQL接口</a></li>
+<li><a href="#parser-%E8%A7%A3%E6%9E%90%E5%99%A8">Parser: 解析器</a></li>
+<li><a href="#optimizer-%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8">Optimizer: 查询优化器。</a></li>
+<li><a href="#cache%E5%92%8Cbuffer-%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98">Cache和Buffer： 查询缓存。</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%95%E6%93%8E%E5%B1%82%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E5%B1%82">引擎层存储引擎层</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%B1%82">数据存储层</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9F%A5%E8%AF%A2sql%E6%89%A7%E8%A1%8C%E5%91%A8%E6%9C%9F">查询SQL执行周期</a>
+<ul>
+<li><a href="#show-profile">show profile</a></li>
+<li><a href="#%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AFprofile%E9%BB%98%E8%AE%A4%E4%B8%BA%E5%85%B3%E9%97%AD">查看是否开启profile,默认为关闭</a></li>
+<li><a href="#%E5%BC%80%E5%90%AFprofile">开启profile</a></li>
+<li><a href="#%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8">具体使用</a></li>
+</ul>
+</li>
+<li><a href="#sql%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F">SQL执行顺序</a></li>
+<li><a href="#%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">存储引擎</a>
+<ul>
+<li><a href="#%E6%9F%A5%E8%AF%A2mysql%E6%94%AF%E6%8C%81%E7%9A%84%E5%BC%95%E6%93%8E">查询MYSQL支持的引擎</a></li>
+<li><a href="#mysql%E5%BC%95%E6%93%8E%E4%BB%8B%E7%BB%8D">MYSQL引擎介绍</a>
+<ul>
+<li><a href="#innodb">InnoDB</a></li>
+<li><a href="#myisam">MyISAM</a></li>
+<li><a href="#archive">Archive</a></li>
+<li><a href="#blackhole">Blackhole</a></li>
+<li><a href="#csv">CSV</a></li>
+<li><a href="#federated">Federated</a></li>
+<li><a href="#memroy">Memroy</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mysql%E7%B4%A2%E5%BC%95">MYSQL索引</a>
+<ul>
+<li><a href="#%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D">索引介绍</a>
+<ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95">什么是索引</a></li>
+<li><a href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E5%8A%BF%E5%92%8C%E5%8A%A3%E5%8A%BF">索引的优势和劣势</a>
+<ul>
+<li><a href="#%E4%BC%98%E5%8A%BF">优势</a></li>
+<li><a href="#%E5%8A%A3%E5%8A%BF">劣势</a></li>
+</ul>
+</li>
+<li><a href="#mysql%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">MYSQL索引使用的数据结构</a>
+<ul>
+<li><a href="#%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E4%B8%8E%E9%9D%9E%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95">聚簇索引与非聚簇索引</a></li>
+<li><a href="#b-tree%E5%92%8Cbtree%E7%9A%84%E9%80%89%E6%8B%A9">B-Tree和B+Tree的选择</a></li>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E7%BA%A2%E9%BB%91%E6%A0%91%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91">为什么不用红黑树/平衡二叉树</a></li>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8b%E6%A0%91%E8%80%8C%E4%B8%8D%E6%98%AFb%E6%A0%91">为什么mysql的索引使用B+树而不是B树</a></li>
+</ul>
+</li>
+<li><a href="#mysql%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB">MYSQL索引分类</a>
+<ul>
+<li><a href="#%E5%8D%95%E5%80%BC%E7%B4%A2%E5%BC%95-%E5%8D%B3%E4%B8%80%E4%B8%AA%E7%B4%A2%E5%BC%95%E5%8F%AA%E5%8C%85%E5%90%AB%E5%8D%95%E4%B8%AA%E5%88%97%E4%B8%80%E4%B8%AA%E8%A1%A8%E5%8F%AF%E4%BB%A5%E6%9C%89%E5%A4%9A%E4%B8%AA%E5%8D%95%E5%88%97%E7%B4%A2%E5%BC%95">单值索引 ：即一个索引只包含单个列，一个表可以有多个单列索引</a></li>
+<li><a href="#%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E7%B4%A2%E5%BC%95%E5%88%97%E7%9A%84%E5%80%BC%E5%BF%85%E9%A1%BB%E5%94%AF%E4%B8%80%E4%BD%86%E5%85%81%E8%AE%B8%E6%9C%89%E7%A9%BA%E5%80%BC">唯一索引：索引列的值必须唯一，但允许有空值</a></li>
+<li><a href="#%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95%E8%AE%BE%E5%AE%9A%E4%B8%BA%E4%B8%BB%E9%94%AE%E5%90%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95innodb%E4%B8%BA%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95">主键索引：设定为主键后数据库会自动建立索引，innodb为聚簇索引</a></li>
+<li><a href="#%E5%A4%8D%E5%90%88%E7%B4%A2%E5%BC%95%E5%8D%B3%E4%B8%80%E4%B8%AA%E7%B4%A2%E5%BC%95%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E5%88%97">复合索引：即一个索引包含多个列</a></li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95">基本语法</a></li>
+</ul>
+</li>
+<li><a href="#mysql%E6%98%AF%E5%90%A6%E5%BA%94%E8%AF%A5%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95%E7%9A%84%E6%83%85%E5%86%B5">MYSQL是否应该建立索引的情况</a>
+<ul>
+<li><a href="#%E9%9C%80%E8%A6%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95">需要创建索引</a></li>
+<li><a href="#%E4%B8%8D%E9%9C%80%E8%A6%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95">不需要创建索引</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mysql%E7%B4%A2%E5%BC%95%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90">MYSQL索引与性能分析</a>
+<ul>
+<li><a href="#explain%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92">EXPLAIN（执行计划）</a>
+<ul>
+<li><a href="#explain-%E5%8F%AF%E4%BB%A5%E6%9F%A5%E5%88%B0">EXPLAIN 可以查到</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8-explain-sql">使用 ： EXPLAIN + SQL</a></li>
+</ul>
+</li>
+<li><a href="#explain%E5%AD%97%E6%AE%B5%E8%A7%A3%E9%87%8A"><code>EXPLAIN字段解释</code></a>
+<ul>
+<li><a href="#id">id</a>
+<ul>
+<li><a href="#%E4%B8%89%E7%A7%8D%E6%83%85%E5%86%B5">三种情况</a></li>
+<li><a href="#%E5%85%B3%E6%B3%A8%E7%82%B9">关注点</a></li>
+</ul>
+</li>
+<li><a href="#select_type">select_type</a>
+<ul>
+<li><a href="#simple">SIMPLE</a></li>
+<li><a href="#primary">PRIMARY</a></li>
+<li><a href="#derived">DERIVED</a></li>
+<li><a href="#subquery">SUBQUERY</a></li>
+<li><a href="#dependent-subquery">DEPENDENT SUBQUERY</a></li>
+<li><a href="#uncacheable-subqurey">UNCACHEABLE SUBQUREY</a></li>
+<li><a href="#union">UNION</a></li>
+<li><a href="#union-result">UNION RESULT</a></li>
+</ul>
+</li>
+<li><a href="#table">table</a></li>
+<li><a href="#partitions">partitions</a></li>
+<li><a href="#type">type</a>
+<ul>
+<li><a href="#system">system</a></li>
+<li><a href="#const">const</a></li>
+<li><a href="#eq_ref">eq_ref</a></li>
+<li><a href="#ref">ref</a></li>
+<li><a href="#range"><code>range</code></a></li>
+<li><a href="#index"><code>index</code></a></li>
+<li><a href="#all%E6%9C%80%E4%B8%BA%E8%87%B4%E5%91%BD%E7%9A%84%E7%B1%BB%E5%9E%8B"><em><code>all</code></em>(最为致命的类型)</a></li>
+<li><a href="#index_merge">index_merge</a></li>
+<li><a href="#ref_or_null">ref_or_null</a></li>
+<li><a href="#index_subquery">index_subquery</a></li>
+<li><a href="#unique_subquery">unique_subquery</a></li>
+<li><a href="#%E5%A4%87%E6%B3%A8%E4%B8%80%E8%88%AC%E6%9D%A5%E8%AF%B4%E5%BE%97%E4%BF%9D%E8%AF%81%E6%9F%A5%E8%AF%A2%E8%87%B3%E5%B0%91%E8%BE%BE%E5%88%B0range%E7%BA%A7%E5%88%AB%E6%9C%80%E5%A5%BD%E8%83%BD%E8%BE%BE%E5%88%B0ref">备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</a></li>
+</ul>
+</li>
+<li><a href="#possible_keys">possible_keys</a></li>
+<li><a href="#key">key</a></li>
+<li><a href="#key_len">key_len</a></li>
+<li><a href="#ref-2">ref</a></li>
+<li><a href="#rows">rows</a></li>
+<li><a href="#filtered">filtered</a></li>
+<li><a href="#extra">Extra</a>
+<ul>
+<li><a href="#using-filesort"><code>Using filesort</code></a></li>
+<li><a href="#using-temporary"><code>Using temporary</code></a></li>
+<li><a href="#using-index"><code>USING index</code></a></li>
+<li><a href="#using-where">Using where</a></li>
+<li><a href="#using-join-buffer">using join buffer</a></li>
+<li><a href="#impossible-where">impossible where</a></li>
+<li><a href="#select-tables-optimized-away">select tables optimized away</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><code>查询优化策略</code></a>
+<ul>
+<li><a href="#%E5%8D%95%E8%A1%A8%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%B8%B8%E8%A7%81%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88">单表使用索引及常见索引失效</a></li>
+<li><a href="#%E4%B8%80%E8%88%AC%E6%80%A7%E5%BB%BA%E8%AE%AE">一般性建议</a></li>
+<li><a href="#%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96">关联查询优化</a></li>
+<li><a href="#%E5%AD%90%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96">子查询优化</a></li>
+<li><a href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96">分组查询优化</a>
+<ul>
+<li><a href="#%E6%97%A0%E6%B3%95%E9%81%BF%E5%85%8Dfilesort%E7%9A%84%E6%83%85%E5%86%B5">无法避免FileSort的情况</a></li>
+<li><a href="#%E5%8D%95%E8%B7%AF%E6%8E%92%E5%BA%8F%E7%9A%84%E9%97%AE%E9%A2%98">单路排序的问题</a></li>
+<li><a href="#%E5%8D%95%E8%B7%AF%E6%8E%92%E5%BA%8F%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5">单路排序优化策略</a></li>
+<li><a href="#%E7%AD%96%E7%95%A5%E5%88%86%E6%9E%90">策略分析</a></li>
+</ul>
+</li>
+<li><a href="#group-by%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%8C%96">GROUP BY关键字优化</a></li>
+<li><a href="#%E6%9C%80%E5%90%8E%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95%E7%9A%84%E6%89%8B%E6%AE%B5%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95">最后使用索引的手段：覆盖索引</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90">查询截取分析</a>
+<ul>
+<li><a href="#%E6%85%A2%E6%9F%A5%E8%AF%A2%E8%AF%B4%E6%98%8E">慢查询说明</a>
+<ul>
+<li><a href="#%E6%9F%A5%E8%AF%A2%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF%E4%BB%A5%E5%8F%8A%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">查询是否开启以及配置参数</a></li>
+<li><a href="#%E5%BC%80%E5%90%AF%E4%BB%A5%E5%8F%8A%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">开启以及配置参数</a>
+<ul>
+<li><a href="#%E5%91%BD%E4%BB%A4%E6%96%B9%E5%BC%8F">命令方式</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F-mycnf">配置文件方式  my.cnf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7mysqldumpslow">日志分析工具mysqldumpslow</a>
+<ul>
+<li><a href="#%E6%9F%A5%E7%9C%8Bmysqldumpslow%E7%9A%84%E5%B8%AE%E5%8A%A9%E4%BF%A1%E6%81%AF">查看mysqldumpslow的帮助信息</a></li>
+<li><a href="#%E5%B7%A5%E4%BD%9C%E5%B8%B8%E7%94%A8%E5%8F%82%E8%80%83">工作常用参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://EastBeforeDawn.github.io/post/redis/">
+              <h3 class="post-title">
+                Redis
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
