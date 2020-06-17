@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://EastBeforeDawn.github.io</id>
     <title>东方未明</title>
-    <updated>2020-06-11T16:16:41.337Z</updated>
+    <updated>2020-06-17T15:10:19.582Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://EastBeforeDawn.github.io"/>
     <link rel="self" href="https://EastBeforeDawn.github.io/atom.xml"/>
@@ -18,7 +18,7 @@
         <updated>2020-06-11T15:02:58.000Z</updated>
         <content type="html"><![CDATA[<h2 id="mysql安装">MYSQL安装</h2>
 <ul>
-<li>略   .</li>
+<li>略</li>
 </ul>
 <h3 id="配置文件问题">配置文件问题</h3>
 <h4 id="mysql查看当前使用哪个路径下配置文件mycnf的方法">MySQL查看当前使用哪个路径下配置文件my.cnf的方法</h4>
