@@ -1,106 +1,111 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta charset="utf-8" >
+
 <title>JVM上篇 | 东方未明</title>
-<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592407002163">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592408014616">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://EastBeforeDawn.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="JVM上篇 | 东方未明 - Atom Feed" href="https://EastBeforeDawn.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="JVM内存结构概述
-整体结构图
-
-类加载器和加载过程概述
-类加载器概念
-
-Java虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的加载机制。Cla..." />
-    <meta name="keywords" content="Java" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://EastBeforeDawn.github.io">
-  <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592407002163" alt="">
-  </a>
-  <h1 class="site-title">
-    东方未明
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="/" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://EastBeforeDawn.github.io">
+        <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592408014616" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://EastBeforeDawn.github.io">
+        <h1 class="site-title">东方未明</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              JVM上篇
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-11
-              </span>
-              <span>
-                58 min read
-              </span>
-              
-                <a href="https://EastBeforeDawn.github.io/tag/kqgzXDB_o/" class="post-tag">
-                  # Java
-                </a>
-              
+          
+            <div class="feature-container" style="background-image: url('https://EastBeforeDawn.github.io/post-images/jvmPart1.jpg')">
             </div>
+          
+          <h2 class="post-title">JVM上篇</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-06-11</span>
             
-              <img class="post-feature-image" src="https://EastBeforeDawn.github.io/post-images/jvmPart1.jpg" alt="">
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://EastBeforeDawn.github.io/tag/kqgzXDB_o/">
+                    Java
+                    
+                  </a>
+                
+              </span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h2 id="jvm内存结构概述">JVM内存结构概述</h2>
+          </div>
+          <div class="post-content">
+            <h2 id="jvm内存结构概述">JVM内存结构概述</h2>
 <h3 id="整体结构图">整体结构图</h3>
 <figure data-type="image" tabindex="1"><img src="https://EastBeforeDawn.github.io/post-images/1591883345936.png" alt="" loading="lazy"></figure>
 <h3 id="类加载器和加载过程概述">类加载器和加载过程概述</h3>
@@ -1486,264 +1491,78 @@ public class StringBuilderTest {
 </ul>
 <p>其实不分代完全可以，分代的唯一理由就是优化GC性能。如果没有分代，那所有的对象都在一块，就如同把一个学校的人都关在一个教室。GC的时候要找到哪些对象没用，这样就会对堆的所有区域进行扫描。而很多对象都是朝生夕死的，如果分代的话，把新创建的对象放到某一地方，当GC的时候先把这块存储“朝生夕死”对象的区域进行回收，这样就会腾出很大的空间出来。</p>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#jvm%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E6%A6%82%E8%BF%B0">JVM内存结构概述</a>
-<ul>
-<li><a href="#%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84%E5%9B%BE">整体结构图</a></li>
-<li><a href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B%E6%A6%82%E8%BF%B0">类加载器和加载过程概述</a>
-<ul>
-<li><a href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E6%A6%82%E5%BF%B5">类加载器概念</a></li>
-<li><a href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%AD%90%E7%B3%BB%E7%BB%9F%E4%BD%9C%E7%94%A8">类加载子系统作用</a></li>
-<li><a href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8classloader%E8%A7%92%E8%89%B2">类加载器ClassLoader角色</a></li>
-</ul>
-</li>
-<li><a href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B">类加载过程</a>
-<ul>
-<li><a href="#%E4%B8%80-%E5%8A%A0%E8%BD%BDloading">一. 加载（Loading）：</a>
-<ul>
-<li><a href="#%E5%8A%A0%E8%BD%BD-calss-%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F">加载 .calss 文件的方式</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BA%8C-%E8%BF%9E%E6%8E%A5linking">二. 连接（Linking）</a>
-<ul>
-<li><a href="#1%E9%AA%8C%E8%AF%81verify">1.验证（Verify）</a></li>
-<li><a href="#2%E5%87%86%E5%A4%87prepare">2.准备（Prepare）</a></li>
-<li><a href="#3%E8%A7%A3%E6%9E%90resolve">3.解析（Resolve）</a></li>
-</ul>
-</li>
-<li><a href="#%E4%B8%89-%E5%88%9D%E5%A7%8B%E5%8C%96initialization">三. 初始化（Initialization）</a>
-<ul>
-<li><a href="#%E9%A1%BA%E5%BA%8F%E6%89%A7%E8%A1%8C%E7%9A%84%E5%AD%97%E8%8A%82%E7%A0%81%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B">顺序执行的字节码文件示例</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E9%94%99%E8%AF%AF%E7%A4%BA%E4%BE%8B">代码错误示例</a></li>
-<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">注意事项</a></li>
-<li><a href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%8A%A0%E9%94%81%E7%A4%BA%E4%BE%8B">多线程类加载加锁示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8">类加载器</a>
-<ul>
-<li><a href="#%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%BC%95%E5%AF%BC%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8bootstrap-classloader">启动类加载器（引导类加载器，Bootstrap ClassLoader）</a></li>
-<li><a href="#%E6%89%A9%E5%B1%95%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8extension-classloader">扩展类加载器（Extension ClassLoader）</a></li>
-<li><a href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E4%B9%9F%E5%8F%AB%E7%B3%BB%E7%BB%9F%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8appclassloader">应用程序类加载器（也叫系统类加载器，AppClassLoader）</a></li>
-<li><a href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">类加载器代码示例</a></li>
-<li><a href="#%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8">用户自定义类加载器</a>
-<ul>
-<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8">为什么要自定义类加载器？</a></li>
-<li><a href="#%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4">用户自定义加载器实现步骤</a></li>
-<li><a href="#classloader%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95">ClassLoader常用方法</a></li>
-<li><a href="#%E8%8E%B7%E5%8F%96classloader%E7%9A%84%E9%80%94%E5%BE%84">获取ClassLoader的途径</a></li>
-</ul>
-</li>
-<li><a href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6">双亲委派机制</a>
-<ul>
-<li><a href="#%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B">工作过程</a></li>
-<li><a href="#%E4%BC%98%E5%8A%BF">优势</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B1">代码示例1</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B2">代码示例2</a></li>
-<li><a href="#%E6%B2%99%E7%AE%B1%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6">沙箱安全机制</a></li>
-<li><a href="#%E7%A0%B4%E5%9D%8F%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B">破坏双亲委派模型</a></li>
-<li><a href="#%E7%B1%BB%E7%9A%84%E4%B8%BB%E5%8A%A8%E4%BD%BF%E7%94%A8%E5%92%8C%E8%A2%AB%E5%8A%A8%E4%BD%BF%E7%94%A8">类的主动使用和被动使用</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84">运行时数据区的内存结构</a>
-<ul>
-<li><a href="#1program-counter-register-%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%AF%84%E5%AD%98%E5%99%A8">1.Program Counter Register (程序计数寄存器)</a>
-<ul>
-<li><a href="#%E5%AE%9A%E4%B9%89">定义</a></li>
-<li><a href="#%E4%BD%9C%E7%94%A8">作用</a></li>
-<li><a href="#%E7%89%B9%E7%82%B9">特点</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#2-java%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88jvm-stack">2. Java虚拟机栈(JVM Stack)</a>
-<ul>
-<li><a href="#%E5%AE%9A%E4%B9%89-2">定义</a></li>
-<li><a href="#%E7%89%B9%E7%82%B9-2">特点</a></li>
-<li><a href="#%E4%BC%9A%E5%87%BA%E7%8E%B0%E7%9A%84%E5%BC%82%E5%B8%B8">会出现的异常</a>
-<ul>
-<li><a href="#stackoverflowerror">StackOverFlowError</a></li>
-<li><a href="#outofmemoryerror">OutOfMemoryError</a></li>
-</ul>
-</li>
-<li><a href="#%E8%AE%BE%E7%BD%AE%E6%A0%88%E7%9A%84%E5%A4%A7%E5%B0%8F-xss">设置栈的大小 -Xss</a></li>
-<li><a href="#%E6%A0%88%E7%9A%84%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86">栈的存储原理</a>
-<ul>
-<li><a href="#%E6%A0%88%E4%B8%AD%E5%82%A8%E5%AD%98%E4%BB%80%E4%B9%88">栈中储存什么</a></li>
-<li><a href="#%E6%A0%88%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86">栈运行原理</a></li>
-</ul>
-</li>
-<li><a href="#%E6%A0%88%E7%9A%84%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84">栈的内部结构</a></li>
-<li><a href="#1%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E8%A1%A8local-variables">1.局部变量表(Local Variables)</a>
-<ul>
-<li><a href="#slot%E7%9A%84%E7%90%86%E8%A7%A3">slot的理解</a></li>
-<li><a href="#slot%E7%9A%84%E9%87%8D%E5%A4%8D%E5%88%A9%E7%94%A8">slot的重复利用</a></li>
-<li><a href="#%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%9A%84%E5%AF%B9%E6%AF%94">静态变量与局部变量的对比</a></li>
-<li><a href="#%E8%A1%A5%E5%85%85%E8%AF%B4%E6%98%8E">补充说明</a></li>
-</ul>
-</li>
-<li><a href="#2%E6%93%8D%E4%BD%9C%E6%95%B0%E6%A0%88-operand-stack">2.操作数栈 (Operand Stack)</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-2">代码示例</a></li>
-<li><a href="#%E6%A0%88%E9%A1%B6%E7%BC%93%E5%AD%98top-of-stack-cashing%E6%8A%80%E6%9C%AF">栈顶缓存（Top-of-Stack Cashing）技术</a></li>
-</ul>
-</li>
-<li><a href="#3%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5">3.动态链接</a>
-<ul>
-<li><a href="#%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8">方法的调用</a></li>
-<li><a href="#%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E6%8C%87%E4%BB%A4">方法调用指令</a></li>
-<li><a href="#%E8%99%9A%E6%96%B9%E6%B3%95%E8%A1%A8">虚方法表</a></li>
-</ul>
-</li>
-<li><a href="#4%E6%96%B9%E6%B3%95%E8%BF%94%E5%9B%9E%E5%9C%B0%E5%9D%80">4.方法返回地址</a></li>
-<li><a href="#5%E4%B8%80%E4%BA%9B%E9%99%84%E5%8A%A0%E4%BF%A1%E6%81%AF">5.一些附加信息</a></li>
-<li><a href="#java%E6%A0%88%E9%9D%A2%E8%AF%95%E9%A2%98">Java栈面试题</a></li>
-<li><a href="#%E6%96%B9%E6%B3%95%E5%AE%9A%E4%B9%89%E7%9A%84%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E6%98%AF%E5%90%A6%E6%98%AF%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"># 方法定义的局部变量是否是线程安全</a></li>
-</ul>
-</li>
-<li><a href="#3%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88">3.本地方法栈</a>
-<ul>
-<li><a href="#%E5%AD%A6%E5%9C%A8%E5%89%8D%E9%9D%A2%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3">学在前面：本地方法接口</a>
-<ul>
-<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8natice-method">为什么要使用Natice Method</a></li>
-</ul>
-</li>
-<li><a href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88">本地方法栈</a>
-<ul>
-<li><a href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88%E8%BF%90%E8%A1%8C%E6%97%B6%E7%8A%B6%E6%80%81">本地方法栈运行时状态</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#4%E5%A0%86heap">4.堆(heap)</a>
-<ul>
-<li><a href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E8%BF%B0">核心概述</a></li>
-<li><a href="#%E5%86%85%E5%AD%98%E7%BB%86%E5%88%86">内存细分</a>
-<ul>
-<li><a href="#java-7%E5%8F%8A%E4%B9%8B%E5%89%8D">Java 7及之前</a></li>
-<li><a href="#java-8%E5%8F%8A%E4%B9%8B%E5%90%8E">Java 8及之后</a></li>
-<li><a href="#%E5%B9%B4%E8%BD%BB%E4%BB%A3%E4%B8%8E%E8%80%81%E5%B9%B4%E4%BB%A3">年轻代与老年代</a></li>
-</ul>
-</li>
-<li><a href="#%E5%A0%86%E7%A9%BA%E9%97%B4%E5%A4%A7%E5%B0%8F%E7%9A%84%E8%AE%BE%E7%BD%AE">堆空间大小的设置</a></li>
-<li><a href="#%E5%AF%B9%E8%B1%A1%E5%88%86%E9%85%8D%E8%BF%87%E7%A8%8B%E6%A6%82%E8%BF%B0">对象分配过程概述</a>
-<ul>
-<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
-</ul>
-</li>
-<li><a href="#minor-gc-major-gc-%E5%92%8Cfull-gc">Minor GC ，Major GC 和Full GC</a>
-<ul>
-<li><a href="#%E9%83%A8%E5%88%86%E6%94%B6%E9%9B%86">部分收集</a></li>
-<li><a href="#%E6%95%B4%E5%A0%86%E6%94%B6%E9%9B%86">整堆收集</a></li>
-<li><a href="#%E5%B9%B4%E8%BD%BB%E4%BB%A3-gcminor-gc%E8%A7%A6%E5%8F%91%E6%9C%BA%E5%88%B6">年轻代 GC(Minor GC)触发机制</a></li>
-<li><a href="#%E8%80%81%E5%B9%B4%E4%BB%A3gc-major-gcfull-gc%E8%A7%A6%E5%8F%91%E6%9C%BA%E5%88%B6">老年代GC (Major GC/Full GC)触发机制：</a></li>
-<li><a href="#fullgc%E8%A7%A6%E5%8F%91%E6%9C%BA%E5%88%B6">FullGC触发机制</a></li>
-</ul>
-</li>
-<li><a href="#%E5%A0%86%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E6%80%9D%E6%83%B3">堆分代收集思想</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
+      </div>
+
+      
+        
+          <div id="gitalk-container"></div>
+        
 
         
-          
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      
 
-<div id="gitalk-container"></div>
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">RSS</a>
+</div>
 
-<script>
 
-  var gitalk = new Gitalk({
-    clientID: '9961657e440c6c52cf9e',
-    clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
-    repo: 'EastBeforeDawn.github.io',
-    owner: 'EastBeforeDawn',
-    admin: ['EastBeforeDawn'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
+    </div>
+    <script type="application/javascript">
 
-  gitalk.render('gitalk-container')
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
 </script>
 
-          
 
-          
-        
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
-
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: '9961657e440c6c52cf9e',
+        clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
+        repo: 'EastBeforeDawn.github.io',
+        owner: 'EastBeforeDawn',
+        admin: ['EastBeforeDawn'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>

@@ -1,108 +1,111 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta charset="utf-8" >
+
 <title>MYSQL进阶 | 东方未明</title>
-<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592407002163">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592408014616">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://EastBeforeDawn.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="MYSQL进阶 | 东方未明 - Atom Feed" href="https://EastBeforeDawn.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="MYSQL安装
-
-略
-
-配置文件问题
-MySQL查看当前使用哪个路径下配置文件my.cnf的方法
-查看mysql默认读取my.cnf的目录
-
-mysql --help|grep 'my.cnf' 或 mysqld --verbose --h..." />
-    <meta name="keywords" content="Mysql" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://EastBeforeDawn.github.io">
-  <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592407002163" alt="">
-  </a>
-  <h1 class="site-title">
-    东方未明
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="/" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://EastBeforeDawn.github.io">
+        <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592408014616" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://EastBeforeDawn.github.io">
+        <h1 class="site-title">东方未明</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              MYSQL进阶
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-11
-              </span>
-              <span>
-                49 min read
-              </span>
-              
-                <a href="https://EastBeforeDawn.github.io/tag/YtwtV8IaI/" class="post-tag">
-                  # Mysql
-                </a>
-              
+          
+            <div class="feature-container" style="background-image: url('https://EastBeforeDawn.github.io/post-images/mysqlAdvanced.jpg')">
             </div>
+          
+          <h2 class="post-title">MYSQL进阶</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-06-11</span>
             
-              <img class="post-feature-image" src="https://EastBeforeDawn.github.io/post-images/mysqlAdvanced.jpg" alt="">
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://EastBeforeDawn.github.io/tag/YtwtV8IaI/">
+                    Mysql
+                    
+                  </a>
+                
+              </span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h2 id="mysql安装">MYSQL安装</h2>
+          </div>
+          <div class="post-content">
+            <h2 id="mysql安装">MYSQL安装</h2>
 <ul>
 <li>略</li>
 </ul>
@@ -1074,377 +1077,86 @@ log_output=FILE
 </li>
 </ul>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#mysql%E5%AE%89%E8%A3%85">MYSQL安装</a>
-<ul>
-<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%97%AE%E9%A2%98">配置文件问题</a>
-<ul>
-<li><a href="#mysql%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AA%E8%B7%AF%E5%BE%84%E4%B8%8B%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6mycnf%E7%9A%84%E6%96%B9%E6%B3%95">MySQL查看当前使用哪个路径下配置文件my.cnf的方法</a>
-<ul>
-<li><a href="#%E6%9F%A5%E7%9C%8Bmysql%E9%BB%98%E8%AE%A4%E8%AF%BB%E5%8F%96mycnf%E7%9A%84%E7%9B%AE%E5%BD%95">查看mysql默认读取my.cnf的目录</a></li>
-<li><a href="#%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E4%BD%BF%E7%94%A8%E4%BA%86%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E7%9A%84mycnf%E6%96%87%E4%BB%B6">查看是否使用了指定目录的my.cnf文件</a></li>
-<li><a href="#%E5%90%AF%E5%8A%A8%E6%97%B6%E6%B2%A1%E6%9C%89%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">启动时没有使用配置文件</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E5%AD%97%E7%AC%A6%E9%9B%86%E9%97%AE%E9%A2%98">字符集问题</a></li>
-</ul>
-</li>
-<li><a href="#mysql%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86">MYSQL权限管理</a>
-<ul>
-<li><a href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86">用户管理</a>
-<ul>
-<li><a href="#%E6%9F%A5%E7%9C%8B%E7%94%A8%E6%88%B7">查看用户</a>
-<ul>
-<li><a href="#%E5%AD%97%E6%AE%B5%E8%A7%A3%E9%87%8A">字段解释</a></li>
-</ul>
-</li>
-<li><a href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7">创建用户</a></li>
-<li><a href="#%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81">修改密码</a>
-<ul>
-<li><a href="#%E4%BF%AE%E6%94%B9%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81">修改当前用户密码</a></li>
-<li><a href="#%E4%BF%AE%E6%94%B9%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81">修改其他用户密码</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E5%90%8D">修改用户名</a></li>
-<li><a href="#%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7%E5%90%8D">删除用户名</a></li>
-</ul>
-</li>
-<li><a href="#%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86">权限管理</a>
-<ul>
-<li><a href="#%E6%8E%88%E4%BA%88%E6%9D%83%E9%99%90">授予权限</a></li>
-<li><a href="#%E6%9F%A5%E7%9C%8B%E6%9D%83%E9%99%90">查看权限</a>
-<ul>
-<li><a href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E7%94%A8%E6%88%B7">查看当前用户</a></li>
-<li><a href="#%E6%9F%A5%E7%9C%8B%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7">查看其他用户</a></li>
-<li><a href="#%E6%9F%A5%E7%9C%8B%E6%9F%90%E4%B8%AA%E8%A1%A8">查看某个表</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E7%94%A8%E6%88%B7%E6%AD%A3%E5%9C%A8%E5%B9%B2%E4%BB%80%E4%B9%88">查询所有用户正在干什么</a></li>
-</ul>
-</li>
-<li><a href="#mysql-sql_mode%E6%A8%A1%E5%BC%8F%E8%AF%B4%E6%98%8E%E5%8F%8A%E8%AE%BE%E7%BD%AE">MYSQL sql_mode模式说明及设置</a>
-<ul>
-<li><a href="#mysql%E7%9A%84sql_mode%E5%90%88%E7%90%86%E8%AE%BE%E7%BD%AE">MySQL的sql_mode合理设置</a></li>
-<li><a href="#sql-model-%E5%B8%B8%E7%94%A8%E6%9D%A5%E8%A7%A3%E5%86%B3%E4%B8%8B%E9%9D%A2%E5%87%A0%E7%B1%BB%E9%97%AE%E9%A2%98">sql model 常用来解决下面几类问题</a></li>
-<li><a href="#sql_mode%E5%B8%B8%E7%94%A8%E5%80%BC">sql_mode常用值</a>
-<ul>
-<li><a href="#only_full_group_by">ONLY_FULL_GROUP_BY:</a></li>
-<li><a href="#no_auto_value_on_zero">NO_AUTO_VALUE_ON_ZERO:</a></li>
-<li><a href="#strict_trans_tables">STRICT_TRANS_TABLES:</a></li>
-<li><a href="#no_zero_in_date">NO_ZERO_IN_DATE:</a></li>
-<li><a href="#no_zero_date">NO_ZERO_DATE:</a></li>
-<li><a href="#error_for_division_by_zero">ERROR_FOR_DIVISION_BY_ZERO:</a></li>
-<li><a href="#no_auto_create_user">NO_AUTO_CREATE_USER:</a></li>
-<li><a href="#no_engine_substitution">NO_ENGINE_SUBSTITUTION:</a></li>
-<li><a href="#pipes_as_concat">PIPES_AS_CONCAT:</a></li>
-<li><a href="#ansi_quotes">ANSI_QUOTES:</a></li>
-<li><a href="#oracle">ORACLE</a></li>
-</ul>
-</li>
-<li><a href="#%E7%89%88%E6%9C%AC%E5%8C%BA%E5%88%AB">版本区别</a></li>
-<li><a href="#%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">严格模式存在的问题：</a></li>
-<li><a href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9">如何修改</a></li>
-</ul>
-</li>
-<li><a href="#mysql%E9%80%BB%E8%BE%91%E6%9E%B6%E6%9E%84">MYSQL逻辑架构</a>
-<ul>
-<li><a href="#%E6%80%BB%E4%BD%93%E6%A6%82%E8%AE%BA">总体概论</a>
-<ul>
-<li><a href="#%E8%BF%9E%E6%8E%A5%E5%B1%82">连接层</a>
-<ul>
-<li><a href="#connectors%E6%98%AF%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E4%B8%AD%E4%B8%8Esql%E7%9A%84%E4%BA%A4%E4%BA%92">Connectors：是不同语言中与SQL的交互</a></li>
-<li><a href="#management-serveices-utilities-%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%92%8C%E6%8E%A7%E5%88%B6%E5%B7%A5%E5%85%B7">Management Serveices &amp;Utilities ：系统管理和控制工具</a></li>
-</ul>
-</li>
-<li><a href="#%E6%9C%8D%E5%8A%A1%E5%B1%82">服务层</a>
-<ul>
-<li><a href="#connection-pool-%E8%BF%9E%E6%8E%A5%E6%B1%A0%E7%AE%A1%E7%90%86%E7%BC%93%E5%86%B2%E7%94%A8%E6%88%B7%E8%BF%9E%E6%8E%A5%E7%BA%BF%E7%A8%8B%E5%A4%84%E7%90%86%E7%AD%89%E9%9C%80%E8%A6%81%E7%BC%93%E5%AD%98%E7%9A%84%E9%9C%80%E6%B1%82">Connection Pool: 连接池管理缓冲用户连接，线程处理等需要缓存的需求。</a></li>
-<li><a href="#sql-interface-sql%E6%8E%A5%E5%8F%A3">SQL Interface: SQL接口</a></li>
-<li><a href="#parser-%E8%A7%A3%E6%9E%90%E5%99%A8">Parser: 解析器</a></li>
-<li><a href="#optimizer-%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8">Optimizer: 查询优化器。</a></li>
-<li><a href="#cache%E5%92%8Cbuffer-%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98">Cache和Buffer： 查询缓存。</a></li>
-</ul>
-</li>
-<li><a href="#%E5%BC%95%E6%93%8E%E5%B1%82%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E5%B1%82">引擎层存储引擎层</a></li>
-<li><a href="#%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E5%B1%82">数据存储层</a></li>
-</ul>
-</li>
-<li><a href="#%E6%9F%A5%E8%AF%A2sql%E6%89%A7%E8%A1%8C%E5%91%A8%E6%9C%9F">查询SQL执行周期</a>
-<ul>
-<li><a href="#show-profile">show profile</a></li>
-<li><a href="#%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AFprofile%E9%BB%98%E8%AE%A4%E4%B8%BA%E5%85%B3%E9%97%AD">查看是否开启profile,默认为关闭</a></li>
-<li><a href="#%E5%BC%80%E5%90%AFprofile">开启profile</a></li>
-<li><a href="#%E5%85%B7%E4%BD%93%E4%BD%BF%E7%94%A8">具体使用</a></li>
-</ul>
-</li>
-<li><a href="#sql%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F">SQL执行顺序</a></li>
-<li><a href="#%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E">存储引擎</a>
-<ul>
-<li><a href="#%E6%9F%A5%E8%AF%A2mysql%E6%94%AF%E6%8C%81%E7%9A%84%E5%BC%95%E6%93%8E">查询MYSQL支持的引擎</a></li>
-<li><a href="#mysql%E5%BC%95%E6%93%8E%E4%BB%8B%E7%BB%8D">MYSQL引擎介绍</a>
-<ul>
-<li><a href="#innodb">InnoDB</a></li>
-<li><a href="#myisam">MyISAM</a></li>
-<li><a href="#archive">Archive</a></li>
-<li><a href="#blackhole">Blackhole</a></li>
-<li><a href="#csv">CSV</a></li>
-<li><a href="#federated">Federated</a></li>
-<li><a href="#memroy">Memroy</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#mysql%E7%B4%A2%E5%BC%95">MYSQL索引</a>
-<ul>
-<li><a href="#%E7%B4%A2%E5%BC%95%E4%BB%8B%E7%BB%8D">索引介绍</a>
-<ul>
-<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%B4%A2%E5%BC%95">什么是索引</a></li>
-<li><a href="#%E7%B4%A2%E5%BC%95%E7%9A%84%E4%BC%98%E5%8A%BF%E5%92%8C%E5%8A%A3%E5%8A%BF">索引的优势和劣势</a>
-<ul>
-<li><a href="#%E4%BC%98%E5%8A%BF">优势</a></li>
-<li><a href="#%E5%8A%A3%E5%8A%BF">劣势</a></li>
-</ul>
-</li>
-<li><a href="#mysql%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">MYSQL索引使用的数据结构</a>
-<ul>
-<li><a href="#%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95%E4%B8%8E%E9%9D%9E%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95">聚簇索引与非聚簇索引</a></li>
-<li><a href="#b-tree%E5%92%8Cbtree%E7%9A%84%E9%80%89%E6%8B%A9">B-Tree和B+Tree的选择</a></li>
-<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%94%A8%E7%BA%A2%E9%BB%91%E6%A0%91%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91">为什么不用红黑树/平衡二叉树</a></li>
-<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88mysql%E7%9A%84%E7%B4%A2%E5%BC%95%E4%BD%BF%E7%94%A8b%E6%A0%91%E8%80%8C%E4%B8%8D%E6%98%AFb%E6%A0%91">为什么mysql的索引使用B+树而不是B树</a></li>
-</ul>
-</li>
-<li><a href="#mysql%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB">MYSQL索引分类</a>
-<ul>
-<li><a href="#%E5%8D%95%E5%80%BC%E7%B4%A2%E5%BC%95-%E5%8D%B3%E4%B8%80%E4%B8%AA%E7%B4%A2%E5%BC%95%E5%8F%AA%E5%8C%85%E5%90%AB%E5%8D%95%E4%B8%AA%E5%88%97%E4%B8%80%E4%B8%AA%E8%A1%A8%E5%8F%AF%E4%BB%A5%E6%9C%89%E5%A4%9A%E4%B8%AA%E5%8D%95%E5%88%97%E7%B4%A2%E5%BC%95">单值索引 ：即一个索引只包含单个列，一个表可以有多个单列索引</a></li>
-<li><a href="#%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95%E7%B4%A2%E5%BC%95%E5%88%97%E7%9A%84%E5%80%BC%E5%BF%85%E9%A1%BB%E5%94%AF%E4%B8%80%E4%BD%86%E5%85%81%E8%AE%B8%E6%9C%89%E7%A9%BA%E5%80%BC">唯一索引：索引列的值必须唯一，但允许有空值</a></li>
-<li><a href="#%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95%E8%AE%BE%E5%AE%9A%E4%B8%BA%E4%B8%BB%E9%94%AE%E5%90%8E%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95innodb%E4%B8%BA%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95">主键索引：设定为主键后数据库会自动建立索引，innodb为聚簇索引</a></li>
-<li><a href="#%E5%A4%8D%E5%90%88%E7%B4%A2%E5%BC%95%E5%8D%B3%E4%B8%80%E4%B8%AA%E7%B4%A2%E5%BC%95%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E5%88%97">复合索引：即一个索引包含多个列</a></li>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95">基本语法</a></li>
-</ul>
-</li>
-<li><a href="#mysql%E6%98%AF%E5%90%A6%E5%BA%94%E8%AF%A5%E5%BB%BA%E7%AB%8B%E7%B4%A2%E5%BC%95%E7%9A%84%E6%83%85%E5%86%B5">MYSQL是否应该建立索引的情况</a>
-<ul>
-<li><a href="#%E9%9C%80%E8%A6%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95">需要创建索引</a></li>
-<li><a href="#%E4%B8%8D%E9%9C%80%E8%A6%81%E5%88%9B%E5%BB%BA%E7%B4%A2%E5%BC%95">不需要创建索引</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#mysql%E7%B4%A2%E5%BC%95%E4%B8%8E%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90">MYSQL索引与性能分析</a>
-<ul>
-<li><a href="#explain%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92">EXPLAIN（执行计划）</a>
-<ul>
-<li><a href="#explain-%E5%8F%AF%E4%BB%A5%E6%9F%A5%E5%88%B0">EXPLAIN 可以查到</a></li>
-<li><a href="#%E4%BD%BF%E7%94%A8-explain-sql">使用 ： EXPLAIN + SQL</a></li>
-</ul>
-</li>
-<li><a href="#explain%E5%AD%97%E6%AE%B5%E8%A7%A3%E9%87%8A"><code>EXPLAIN字段解释</code></a>
-<ul>
-<li><a href="#id">id</a>
-<ul>
-<li><a href="#%E4%B8%89%E7%A7%8D%E6%83%85%E5%86%B5">三种情况</a></li>
-<li><a href="#%E5%85%B3%E6%B3%A8%E7%82%B9">关注点</a></li>
-</ul>
-</li>
-<li><a href="#select_type">select_type</a>
-<ul>
-<li><a href="#simple">SIMPLE</a></li>
-<li><a href="#primary">PRIMARY</a></li>
-<li><a href="#derived">DERIVED</a></li>
-<li><a href="#subquery">SUBQUERY</a></li>
-<li><a href="#dependent-subquery">DEPENDENT SUBQUERY</a></li>
-<li><a href="#uncacheable-subqurey">UNCACHEABLE SUBQUREY</a></li>
-<li><a href="#union">UNION</a></li>
-<li><a href="#union-result">UNION RESULT</a></li>
-</ul>
-</li>
-<li><a href="#table">table</a></li>
-<li><a href="#partitions">partitions</a></li>
-<li><a href="#type">type</a>
-<ul>
-<li><a href="#system">system</a></li>
-<li><a href="#const">const</a></li>
-<li><a href="#eq_ref">eq_ref</a></li>
-<li><a href="#ref">ref</a></li>
-<li><a href="#range"><code>range</code></a></li>
-<li><a href="#index"><code>index</code></a></li>
-<li><a href="#all%E6%9C%80%E4%B8%BA%E8%87%B4%E5%91%BD%E7%9A%84%E7%B1%BB%E5%9E%8B"><em><code>all</code></em>(最为致命的类型)</a></li>
-<li><a href="#index_merge">index_merge</a></li>
-<li><a href="#ref_or_null">ref_or_null</a></li>
-<li><a href="#index_subquery">index_subquery</a></li>
-<li><a href="#unique_subquery">unique_subquery</a></li>
-<li><a href="#%E5%A4%87%E6%B3%A8%E4%B8%80%E8%88%AC%E6%9D%A5%E8%AF%B4%E5%BE%97%E4%BF%9D%E8%AF%81%E6%9F%A5%E8%AF%A2%E8%87%B3%E5%B0%91%E8%BE%BE%E5%88%B0range%E7%BA%A7%E5%88%AB%E6%9C%80%E5%A5%BD%E8%83%BD%E8%BE%BE%E5%88%B0ref">备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</a></li>
-</ul>
-</li>
-<li><a href="#possible_keys">possible_keys</a></li>
-<li><a href="#key">key</a></li>
-<li><a href="#key_len">key_len</a></li>
-<li><a href="#ref-2">ref</a></li>
-<li><a href="#rows">rows</a></li>
-<li><a href="#filtered">filtered</a></li>
-<li><a href="#extra">Extra</a>
-<ul>
-<li><a href="#using-filesort"><code>Using filesort</code></a></li>
-<li><a href="#using-temporary"><code>Using temporary</code></a></li>
-<li><a href="#using-index"><code>USING index</code></a></li>
-<li><a href="#using-where">Using where</a></li>
-<li><a href="#using-join-buffer">using join buffer</a></li>
-<li><a href="#impossible-where">impossible where</a></li>
-<li><a href="#select-tables-optimized-away">select tables optimized away</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><code>查询优化策略</code></a>
-<ul>
-<li><a href="#%E5%8D%95%E8%A1%A8%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95%E5%8F%8A%E5%B8%B8%E8%A7%81%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88">单表使用索引及常见索引失效</a></li>
-<li><a href="#%E4%B8%80%E8%88%AC%E6%80%A7%E5%BB%BA%E8%AE%AE">一般性建议</a></li>
-<li><a href="#%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96">关联查询优化</a></li>
-<li><a href="#%E5%AD%90%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96">子查询优化</a></li>
-<li><a href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96">分组查询优化</a>
-<ul>
-<li><a href="#%E6%97%A0%E6%B3%95%E9%81%BF%E5%85%8Dfilesort%E7%9A%84%E6%83%85%E5%86%B5">无法避免FileSort的情况</a></li>
-<li><a href="#%E5%8D%95%E8%B7%AF%E6%8E%92%E5%BA%8F%E7%9A%84%E9%97%AE%E9%A2%98">单路排序的问题</a></li>
-<li><a href="#%E5%8D%95%E8%B7%AF%E6%8E%92%E5%BA%8F%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5">单路排序优化策略</a></li>
-<li><a href="#%E7%AD%96%E7%95%A5%E5%88%86%E6%9E%90">策略分析</a></li>
-</ul>
-</li>
-<li><a href="#group-by%E5%85%B3%E9%94%AE%E5%AD%97%E4%BC%98%E5%8C%96">GROUP BY关键字优化</a></li>
-<li><a href="#%E6%9C%80%E5%90%8E%E4%BD%BF%E7%94%A8%E7%B4%A2%E5%BC%95%E7%9A%84%E6%89%8B%E6%AE%B5%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95">最后使用索引的手段：覆盖索引</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E6%9F%A5%E8%AF%A2%E6%88%AA%E5%8F%96%E5%88%86%E6%9E%90">查询截取分析</a>
-<ul>
-<li><a href="#%E6%85%A2%E6%9F%A5%E8%AF%A2%E8%AF%B4%E6%98%8E">慢查询说明</a>
-<ul>
-<li><a href="#%E6%9F%A5%E8%AF%A2%E6%98%AF%E5%90%A6%E5%BC%80%E5%90%AF%E4%BB%A5%E5%8F%8A%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">查询是否开启以及配置参数</a></li>
-<li><a href="#%E5%BC%80%E5%90%AF%E4%BB%A5%E5%8F%8A%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">开启以及配置参数</a>
-<ul>
-<li><a href="#%E5%91%BD%E4%BB%A4%E6%96%B9%E5%BC%8F">命令方式</a></li>
-<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%96%B9%E5%BC%8F-mycnf">配置文件方式  my.cnf</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7mysqldumpslow">日志分析工具mysqldumpslow</a>
-<ul>
-<li><a href="#%E6%9F%A5%E7%9C%8Bmysqldumpslow%E7%9A%84%E5%B8%AE%E5%8A%A9%E4%BF%A1%E6%81%AF">查看mysqldumpslow的帮助信息</a></li>
-<li><a href="#%E5%B7%A5%E4%BD%9C%E5%B8%B8%E7%94%A8%E5%8F%82%E8%80%83">工作常用参考</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://EastBeforeDawn.github.io/post/redis/">
+            <a class="purple-link" href="https://EastBeforeDawn.github.io/post/redis/">
               <h3 class="post-title">
-                Redis
+                下一篇：Redis
               </h3>
             </a>
           </div>
-        
-
-        
           
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      </div>
 
-<div id="gitalk-container"></div>
+      
+        
+          <div id="gitalk-container"></div>
+        
 
-<script>
+        
+      
 
-  var gitalk = new Gitalk({
-    clientID: '9961657e440c6c52cf9e',
-    clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
-    repo: 'EastBeforeDawn.github.io',
-    owner: 'EastBeforeDawn',
-    admin: ['EastBeforeDawn'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">RSS</a>
+</div>
 
-  gitalk.render('gitalk-container')
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
 </script>
 
-          
 
-          
-        
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
-
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: '9961657e440c6c52cf9e',
+        clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
+        repo: 'EastBeforeDawn.github.io',
+        owner: 'EastBeforeDawn',
+        admin: ['EastBeforeDawn'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>

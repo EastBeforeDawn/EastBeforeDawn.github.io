@@ -1,112 +1,111 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta charset="utf-8" >
+
 <title>Java并发编程 | 东方未明</title>
-<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592407002163">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592408014616">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://EastBeforeDawn.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Java并发编程 | 东方未明 - Atom Feed" href="https://EastBeforeDawn.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="volatile关键字
-
-volatile是java提供的轻量级的同步机制，主要有三个特性：
-
-
-保证可见性
-禁止指令重排
-不保证原子性。
-
-JMM（Java 内存模型）
-基本概念
-
-JMM本身是一种抽象的概念 并不真实存在，他描述的是一组..." />
-    <meta name="keywords" content="Java" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://EastBeforeDawn.github.io">
-  <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592407002163" alt="">
-  </a>
-  <h1 class="site-title">
-    东方未明
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="/" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://EastBeforeDawn.github.io">
+        <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592408014616" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://EastBeforeDawn.github.io">
+        <h1 class="site-title">东方未明</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              Java并发编程
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-11
-              </span>
-              <span>
-                40 min read
-              </span>
-              
-                <a href="https://EastBeforeDawn.github.io/tag/kqgzXDB_o/" class="post-tag">
-                  # Java
-                </a>
-              
+          
+            <div class="feature-container" style="background-image: url('https://EastBeforeDawn.github.io/post-images/javaConcurrent.jpg')">
             </div>
+          
+          <h2 class="post-title">Java并发编程</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-06-11</span>
             
-              <img class="post-feature-image" src="https://EastBeforeDawn.github.io/post-images/javaConcurrent.jpg" alt="">
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://EastBeforeDawn.github.io/tag/kqgzXDB_o/">
+                    Java
+                    
+                  </a>
+                
+              </span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <h2 id="volatile关键字">volatile关键字</h2>
+          </div>
+          <div class="post-content">
+            <h2 id="volatile关键字">volatile关键字</h2>
 <blockquote>
 <p>volatile是java提供的轻量级的同步机制，主要有三个特性：</p>
 </blockquote>
@@ -1503,293 +1502,86 @@ public class CallableDemo {
 <p>↓</p>
 <h3 id="线程池threadpoolexecuter">线程池ThreadPoolExecuter</h3>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#volatile%E5%85%B3%E9%94%AE%E5%AD%97">volatile关键字</a>
-<ul>
-<li><a href="#jmmjava-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B">JMM（Java 内存模型）</a>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">基本概念</a>
-<ul>
-<li><a href="#%E5%8F%AF%E8%A7%81%E6%80%A7%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">可见性代码示例</a></li>
-<li><a href="#%E4%B8%8D%E4%BF%9D%E8%AF%81%E5%8E%9F%E5%AD%90%E6%80%A7%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">不保证原子性代码示例</a></li>
-<li><a href="#%E7%A6%81%E6%AD%A2%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92">禁止指令重排</a></li>
-<li><a href="#volatile%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95%E5%8F%8C%E7%AB%AF%E6%A3%80%E9%94%81%E5%8D%95%E4%BE%8B">volatile常见用法（双端检锁单例）</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#cas-compareandswap%E6%AF%94%E8%BE%83%E5%B9%B6%E4%BA%A4%E6%8D%A2">CAS （CompareAndSwap）比较并交换</a>
-<ul>
-<li><a href="#unsafe%E7%B1%BB">UnSafe类</a>
-<ul>
-<li><a href="#atomicinteger%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">AtomicInteger示例代码</a></li>
-<li><a href="#atomicrefence%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81">AtomicRefence示例代码</a></li>
-</ul>
-</li>
-<li><a href="#cas%E7%9A%84%E7%BC%BA%E7%82%B9">CAS的缺点</a>
-<ul>
-<li><a href="#aba%E9%97%AE%E9%A2%98">ABA问题</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B">代码示例</a></li>
-</ul>
-</li>
-<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解决方案</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-2">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#java%E4%B8%AD%E7%9A%84%E9%94%81">Java中的锁</a>
-<ul>
-<li><a href="#%E5%85%AC%E5%B9%B3%E9%94%81%E4%B8%8E%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81">公平锁与非公平锁</a>
-<ul>
-<li><a href="#%E4%B8%A4%E8%80%85%E5%8C%BA%E5%88%AB">两者区别</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-3">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81%E9%80%92%E5%BD%92%E9%94%81%E5%92%8C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81">可重入锁（递归锁）和不可重入锁</a><br>
-*
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-4">代码示例</a></li>
-</ul>
-</li>
-<li><a href="#%E8%87%AA%E6%97%8B%E9%94%81-cas%E5%8E%9F%E7%90%86">自旋锁 (CAS原理)</a><br>
-*
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-5">代码示例</a></li>
-</ul>
-</li>
-<li><a href="#%E7%8B%AC%E5%8D%A0%E9%94%81%E4%B8%8E%E5%85%B1%E4%BA%AB%E9%94%81%E8%AF%BB%E5%86%99%E9%94%81">独占锁与共享锁（读写锁）</a>
-<ul>
-<li><a href="#%E5%88%86%E7%B1%BB">分类</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-6">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#synchronized-%E5%92%8C-lock">synchronized 和 Lock</a></li>
-<li><a href="#%E5%8E%9F%E5%A7%8B%E7%BB%93%E6%9E%84">原始结构</a><br>
-*
-<ul>
-<li><a href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">使用方法</a></li>
-<li><a href="#%E7%AD%89%E5%BE%85%E6%98%AF%E5%90%A6%E5%8F%AF%E4%B8%AD%E6%96%AD">等待是否可中断</a></li>
-<li><a href="#%E5%8A%A0%E9%94%81%E6%98%AF%E5%90%A6%E5%85%AC%E5%B9%B3">加锁是否公平</a></li>
-<li><a href="#%E9%94%81%E5%8F%AF%E4%BB%A5%E7%BB%91%E5%AE%9A%E5%A4%9A%E4%B8%AA-condition">锁可以绑定多个 Condition</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8Bsynchronized%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%9E%8B">代码示例:synchronized实现生产消费模型</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8Breentrantlock%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%9E%8B">代码示例:ReentrantLock实现生产消费模型</a></li>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8Breentrantlock%E5%AE%9E%E7%8E%B0%E7%B2%BE%E5%87%86%E5%94%A4%E9%86%92">代码示例:ReentrantLock实现精准唤醒</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#juc%E5%8C%85%E7%9A%84%E5%B9%B6%E5%8F%91%E5%B7%A5%E5%85%B7%E7%B1%BB">JUC包的并发工具类</a>
-<ul>
-<li><a href="#countdownlatch">CountDownLatch</a>
-<ul>
-<li><a href="#countdownlatch%E4%B8%BB%E8%A6%81%E6%9C%89%E4%B8%A4%E4%B8%AA%E6%96%B9%E6%B3%95countdown%E5%92%8Cawait">CountDownLatch主要有两个方法：countDown()和await()。</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-7">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#cyclicbarrier">CyclicBarrier</a>
-<ul>
-<li><a href="#cyclicbarrier%E7%9A%84%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">CyclicBarrier的构造方法</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-8">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#countdownlatch%E4%B8%8Ecyclicbarrier%E6%AF%94%E8%BE%83">CountDownLatch与CyclicBarrier比较</a></li>
-<li><a href="#semaphore">Semaphore</a>
-<ul>
-<li><a href="#semaphore%E7%9A%84%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">Semaphore的构造方法</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-9">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB">线程安全的集合类</a>
-<ul>
-<li><a href="#list%E5%88%97%E8%A1%A8">List（列表）</a></li>
-<li><a href="#set%E9%9B%86">Set（集）</a></li>
-<li><a href="#map%E6%98%A0%E5%B0%84">Map（映射）</a></li>
-<li><a href="#%E9%99%A4%E5%BA%9F%E5%BC%83%E7%9A%84%E9%9B%86%E5%90%88%E7%B1%BB%E5%A4%96%E8%BF%98%E6%9C%89%E5%93%AA%E4%BA%9B%E6%96%B9%E6%B3%95%E5%8F%AF%E4%BB%A5%E4%BF%9D%E8%AF%81%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8">除废弃的集合类外还有哪些方法可以保证线程安全</a>
-<ul>
-<li><a href="#collections%E5%8C%85%E8%A3%85%E6%96%B9%E6%B3%95">Collections包装方法</a></li>
-<li><a href="#javautilconcurrent%E5%8C%85%E4%B8%AD%E7%9A%84%E9%9B%86%E5%90%88">java.util.concurrent包中的集合</a>
-<ul>
-<li><a href="#copyonwritearraylist%E5%92%8Ccopyonwritearrayset">CopyOnWriteArrayList和CopyOnWriteArraySet</a></li>
-<li><a href="#concurrenthashmap">ConcurrentHashMap</a></li>
-</ul>
-</li>
-<li><a href="#copyonwrite%E6%9C%BA%E5%88%B6">CopyOnWrite机制</a>
-<ul>
-<li><a href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">使用场景</a></li>
-<li><a href="#%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E7%82%B9">使用注意点</a></li>
-<li><a href="#%E7%BC%BA%E7%82%B9">缺点</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#blockingqueue%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97">BlockingQueue（阻塞队列）</a>
-<ul>
-<li><a href="#blockingqueue%E7%9A%84%E4%B8%83%E4%B8%AA%E5%AE%9E%E7%8E%B0%E7%B1%BB">BlockingQueue的七个实现类</a></li>
-<li><a href="#blockingqueue%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E7%9A%84api">BlockingQueue阻塞队列的api</a>
-<ul>
-<li><a href="#%E8%BF%99%E5%9B%9B%E7%B1%BB%E6%96%B9%E6%B3%95%E5%88%86%E5%88%AB%E5%AF%B9%E5%BA%94%E7%9A%84%E6%98%AF">这四类方法分别对应的是：</a>
-<ul>
-<li><a href="#%E6%8F%92%E5%85%A5%E6%96%B9%E6%B3%95">插入方法</a></li>
-<li><a href="#%E5%88%A0%E9%99%A4%E6%96%B9%E6%B3%95">删除方法</a></li>
-<li><a href="#%E6%A3%80%E6%9F%A5%E6%96%B9%E6%B3%95">检查方法</a></li>
-</ul>
-</li>
-<li><a href="#blockingqueue%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%9E%8B">BlockingQueue实现生产消费模型</a>
-<ul>
-<li><a href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-10">代码示例</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E5%AE%9E%E7%8E%B0%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F">实现多线程的几种方式</a>
-<ul>
-<li><a href="#%E7%BB%A7%E6%89%BFthread%E7%B1%BB%E9%87%8D%E5%86%99run%E6%96%B9%E6%B3%95">继承Thread类，重写run方法</a></li>
-<li><a href="#%E5%AE%9E%E7%8E%B0runnable%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%86%99run%E6%96%B9%E6%B3%95">实现Runnable接口，重写run方法</a></li>
-<li><a href="#%E5%AE%9E%E7%8E%B0callable%E6%8E%A5%E5%8F%A3%E9%87%8D%E5%86%99call%E6%96%B9%E6%B3%95%E9%80%9A%E8%BF%87futuretask%E5%8C%85%E8%A3%85%E5%99%A8%E6%9D%A5%E5%88%9B%E5%BB%BAthread%E7%BA%BF%E7%A8%8B">实现Callable接口，重写call方法，通过FutureTask包装器来创建Thread线程</a>
-<ul>
-<li><a href="#runnable%E5%92%8Ccallable%E7%9A%84%E5%8C%BA%E5%88%AB">Runnable和Callable的区别：</a></li>
-<li><a href="#future%E6%8E%A5%E5%8F%A3">Future接口</a></li>
-<li><a href="#futuretask%E7%B1%BB">FutureTask类</a></li>
-<li><a href="#callable%E4%B8%A4%E7%A7%8D%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F">Callable两种执行方式</a>
-<ul>
-<li><a href="#%E5%80%9F%E5%8A%A9futuretask%E6%89%A7%E8%A1%8C">借助FutureTask执行</a></li>
-<li><a href="#%E5%80%9F%E5%8A%A9%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E8%BF%90%E8%A1%8C">借助线程池来运行</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0threadpoolexecuter">线程池ThreadPoolExecuter</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://EastBeforeDawn.github.io/post/jvmPart1/">
+            <a class="purple-link" href="https://EastBeforeDawn.github.io/post/jvmPart1/">
               <h3 class="post-title">
-                JVM上篇
+                下一篇：JVM上篇
               </h3>
             </a>
           </div>
-        
-
-        
           
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      </div>
 
-<div id="gitalk-container"></div>
+      
+        
+          <div id="gitalk-container"></div>
+        
 
-<script>
+        
+      
 
-  var gitalk = new Gitalk({
-    clientID: '9961657e440c6c52cf9e',
-    clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
-    repo: 'EastBeforeDawn.github.io',
-    owner: 'EastBeforeDawn',
-    admin: ['EastBeforeDawn'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">RSS</a>
+</div>
 
-  gitalk.render('gitalk-container')
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
 </script>
 
-          
 
-          
-        
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
-
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: '9961657e440c6c52cf9e',
+        clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
+        repo: 'EastBeforeDawn.github.io',
+        owner: 'EastBeforeDawn',
+        admin: ['EastBeforeDawn'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>

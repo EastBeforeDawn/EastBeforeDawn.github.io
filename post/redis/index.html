@@ -1,111 +1,111 @@
+
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+<meta charset="utf-8" >
+
 <title>Redis | 东方未明</title>
-<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592407002163">
-<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<meta name="description" content="温故而知新">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://EastBeforeDawn.github.io/favicon.ico?v=1592408014616">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://EastBeforeDawn.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Redis | 东方未明 - Atom Feed" href="https://EastBeforeDawn.github.io/atom.xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
 
 
 
-    <meta name="description" content="
-redis是一个基于C语言编写的基本内存又可以持久化的Key-Value数据库。支持的数据类型有String，List，Set，SortedSet，Hash。
-
-基本理论
-
-传统数据库的ACID理论
-
-
-A(atomicty)原子性
-
-
-..." />
-    <meta name="keywords" content="Redis" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
-    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://EastBeforeDawn.github.io">
-  <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592407002163" alt="">
-  </a>
-  <h1 class="site-title">
-    东方未明
-  </h1>
-  <p class="site-description">
-    温故而知新
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="/" class="menu">
-          首页
-        </a>
-      
-    
-      
-        <a href="/archives" class="menu">
-          归档
-        </a>
-      
-    
-      
-        <a href="/tags" class="menu">
-          标签
-        </a>
-      
-    
-      
-        <a href="/post/about" class="menu">
-          关于
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://EastBeforeDawn.github.io">
+        <img class="avatar" src="https://EastBeforeDawn.github.io/images/avatar.png?v=1592408014616" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://EastBeforeDawn.github.io">
+        <h1 class="site-title">东方未明</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
   </div>
 </div>
 
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
         <div class="post-detail">
-          <article class="post">
-            <h2 class="post-title">
-              Redis
-            </h2>
-            <div class="post-info">
-              <span>
-                2020-06-11
-              </span>
-              <span>
-                39 min read
-              </span>
-              
-                <a href="https://EastBeforeDawn.github.io/tag/PqG_LMGgb/" class="post-tag">
-                  # Redis
-                </a>
-              
+          
+            <div class="feature-container" style="background-image: url('https://EastBeforeDawn.github.io/post-images/redis.jpg')">
             </div>
+          
+          <h2 class="post-title">Redis</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-06-11</span>
             
-              <img class="post-feature-image" src="https://EastBeforeDawn.github.io/post-images/redis.jpg" alt="">
+              <span>
+                <i class="icon-pricetags-outline"></i>
+                
+                  <a href="https://EastBeforeDawn.github.io/tag/PqG_LMGgb/">
+                    Redis
+                    
+                  </a>
+                
+              </span>
             
-            <div class="post-content-wrapper">
-              <div class="post-content">
-                <blockquote>
+          </div>
+          <div class="post-content">
+            <blockquote>
 <p>redis是一个基于C语言编写的基本内存又可以持久化的Key-Value数据库。支持的数据类型有String，List，Set，SortedSet，Hash。</p>
 </blockquote>
 <h2 id="基本理论">基本理论</h2>
@@ -821,234 +821,86 @@ min-slaves-max-lag 10   //slave连接到master的最大延迟时间
 min-replicas-max-lag 10
 </code></pre>
 
-              </div>
-              <div class="toc-container">
-                <ul class="markdownIt-TOC">
-<li>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E7%90%86%E8%AE%BA">基本理论</a></li>
-<li><a href="#redis%E6%8C%81%E4%B9%85%E5%8C%96">Redis持久化</a>
-<ul>
-<li><a href="#rdbredis-database">RDB(Redis DataBase)</a>
-<ul>
-<li><a href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E5%8A%A3%E5%8A%BF">优势与劣势</a></li>
-</ul>
-</li>
-<li><a href="#aofappend-only-file">AOF(Append Only File)</a>
-<ul>
-<li><a href="#aof%E7%AD%96%E7%95%A5">AOF策略</a></li>
-<li><a href="#%E9%87%8D%E5%86%99rewrite">重写(rewrite)</a>
-<ul>
-<li><a href="#%E8%A7%A6%E5%8F%91%E6%9C%BA%E5%88%B6">触发机制</a></li>
-<li><a href="#%E9%87%8D%E5%86%99%E6%B5%81%E7%A8%8B">重写流程</a></li>
-<li><a href="#%E5%8E%8B%E7%BC%A9%E6%9C%BA%E5%88%B6">压缩机制</a></li>
-</ul>
-</li>
-<li><a href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E5%8A%A3%E5%8A%BF-2">优势与劣势</a>
-<ul>
-<li><a href="#%E4%BC%98%E5%8A%BF">优势</a></li>
-<li><a href="#%E5%8A%A3%E5%8A%BF">劣势</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%AD%96%E7%95%A5%E9%80%89%E6%8B%A9">持久化策略选择</a>
-<ul>
-<li><a href="#rdb-%E5%92%8C-aof-%E6%80%A7%E8%83%BD%E5%BC%80%E9%94%80">RDB 和 AOF 性能开销</a></li>
-<li><a href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%AD%96%E7%95%A5">持久化策略</a>
-<ul>
-<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%BC%93%E5%AD%98">数据库缓存</a></li>
-<li><a href="#%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83">单机环境</a></li>
-<li><a href="#%E4%B8%BB%E4%BB%8E%E9%83%A8%E7%BD%B2">主从部署</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#redis%E7%9A%84%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5%E5%92%8C%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5">Redis的过期策略和内存淘汰策略</a>
-<ul>
-<li><a href="#redis%E7%9A%84%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5">Redis的过期策略</a></li>
-<li><a href="#redis%E7%9A%84%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5">Redis的内存淘汰策略</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">配置文件</a>
-<ul>
-<li><a href="#%E9%80%9A%E7%94%A8">通用</a></li>
-<li><a href="#rdb">RDB</a></li>
-<li><a href="#aof">AOF</a></li>
-</ul>
-</li>
-<li><a href="#redis%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98">Redis出现的问题</a>
-<ul>
-<li><a href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F">缓存穿透</a>
-<ul>
-<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解决方案</a></li>
-</ul>
-</li>
-<li><a href="#%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF">缓存击穿</a>
-<ul>
-<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-2">解决方案</a></li>
-</ul>
-</li>
-<li><a href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9">缓存雪崩</a>
-<ul>
-<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-3">解决方案</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81">Redis分布式锁</a>
-<ul>
-<li><a href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%AE%9E%E7%8E%B0">分布式锁实现</a>
-<ul>
-<li><a href="#%E5%88%A9%E7%94%A8setnxexpire%E5%91%BD%E4%BB%A4">利用setnx+expire命令</a>
-<ul>
-<li><a href="#%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F">执行方式</a></li>
-<li><a href="#%E9%94%99%E8%AF%AF%E5%88%86%E6%9E%90">错误分析</a></li>
-</ul>
-</li>
-<li><a href="#%E5%88%A9%E7%94%A8-public-string-setstring-key-string-value-setparams-params-%E5%91%BD%E4%BB%A4">利用  public String set(String key, String value, SetParams params) 命令</a>
-<ul>
-<li><a href="#%E6%89%A7%E8%A1%8C%E6%96%B9%E5%BC%8F-2">执行方式</a></li>
-</ul>
-</li>
-<li><a href="#redis%E9%94%81%E4%B8%ADkey%E5%92%8Cvalue%E7%9A%84%E5%88%86%E6%9E%90">redis锁中key和value的分析</a></li>
-</ul>
-</li>
-<li><a href="#%E5%BC%80%E6%BA%90jar%E5%8C%85%E9%87%8C%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-redisson">开源jar包里的分布式锁 Redisson</a>
-<ul>
-<li><a href="#redissonlock">RedissonLock</a>
-<ul>
-<li><a href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95">基本用法</a></li>
-<li><a href="#%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0">具体实现</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#redis%E5%A4%8D%E5%88%B6">Redis复制</a>
-<ul>
-<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95">配置方法</a>
-<ul>
-<li><a href="#%E6%89%8B%E5%8A%A8%E9%85%8D%E7%BD%AE">手动配置</a></li>
-<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE">配置文件配置</a></li>
-</ul>
-</li>
-<li><a href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E9%85%8D%E7%BD%AE">常用的配置</a>
-<ul>
-<li><a href="#%E4%B8%80%E4%B8%BB%E4%BA%8C%E4%BB%8E%E4%B8%80%E4%B8%BB%E5%A4%9A%E4%BB%8E">一主二从/一主多从</a></li>
-<li><a href="#%E8%96%AA%E7%81%AB%E7%9B%B8%E4%BC%A0">薪火相传</a></li>
-<li><a href="#%E5%8F%8D%E5%AE%A2%E4%B8%BA%E4%B8%BB">反客为主</a></li>
-<li><a href="#%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E9%87%8D%E7%82%B9">哨兵模式（重点）</a></li>
-</ul>
-</li>
-<li><a href="#%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86">复制原理</a></li>
-<li><a href="#%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98">脑裂问题</a>
-<ul>
-<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-4">解决方案</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-              </div>
-            </div>
-          </article>
+          </div>
         </div>
 
         
           <div class="next-post">
-            <div class="next">下一篇</div>
-            <a href="https://EastBeforeDawn.github.io/post/javaConcurrent/">
+            <a class="purple-link" href="https://EastBeforeDawn.github.io/post/javaConcurrent/">
               <h3 class="post-title">
-                Java并发编程
+                下一篇：Java并发编程
               </h3>
             </a>
           </div>
-        
-
-        
           
-            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+      </div>
 
-<div id="gitalk-container"></div>
+      
+        
+          <div id="gitalk-container"></div>
+        
 
-<script>
+        
+      
 
-  var gitalk = new Gitalk({
-    clientID: '9961657e440c6c52cf9e',
-    clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
-    repo: 'EastBeforeDawn.github.io',
-    owner: 'EastBeforeDawn',
-    admin: ['EastBeforeDawn'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
+      <div class="site-footer">
+  <div class="slogan">温故而知新</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">RSS</a>
+</div>
 
-  gitalk.render('gitalk-container')
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
 
 </script>
 
-          
 
-          
-        
 
-        <div class="site-footer">
-  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
-  <a class="rss" href="https://EastBeforeDawn.github.io/atom.xml" target="_blank">
-    <i class="ri-rss-line"></i> RSS
-  </a>
-</div>
-
-      </div>
-    </div>
-
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
-      hljs.initHighlightingOnLoad()
 
-      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+      var gitalk = new Gitalk({
+        clientID: '9961657e440c6c52cf9e',
+        clientSecret: '7a480d1c774328434dcd5cf1f5feefa9f0e91583',
+        repo: 'EastBeforeDawn.github.io',
+        owner: 'EastBeforeDawn',
+        admin: ['EastBeforeDawn'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
 
-      // This should probably be throttled.
-      // Especially because it triggers during smooth scrolling.
-      // https://lodash.com/docs/4.17.10#throttle
-      // You could do like...
-      // window.addEventListener("scroll", () => {
-      //    _.throttle(doThatStuff, 100);
-      // });
-      // Only not doing it here to keep this Pen dependency-free.
-
-      window.addEventListener("scroll", event => {
-        let fromTop = window.scrollY;
-
-        mainNavLinks.forEach((link, index) => {
-          let section = document.getElementById(decodeURI(link.hash).substring(1));
-          let nextSection = null
-          if (mainNavLinks[index + 1]) {
-            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
-          }
-          if (section.offsetTop <= fromTop) {
-            if (nextSection) {
-              if (nextSection.offsetTop > fromTop) {
-                link.classList.add("current");
-              } else {
-                link.classList.remove("current");    
-              }
-            } else {
-              link.classList.add("current");
-            }
-          } else {
-            link.classList.remove("current");
-          }
-        });
-      });
+      gitalk.render('gitalk-container')
 
     </script>
+  
+
+  
+
+
+
+
   </body>
 </html>
